@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Build output
+dist/
+build/
+*.log
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Agent-local scratch (local issue tracker convention)
+.scratch/
+
+# Optional: keep agent credentials out of git (see Specify init warning)
+# .cursor/mcp.json
