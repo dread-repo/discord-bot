@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- GitHub webhook announce processor: posts Container messages to guild channels configured via `/github setup` (push to default branch, PR, CI, release, issues, deployment)
+
+### Added
+
 - Prisma ORM for Postgres on Supabase (`DATABASE_URL`, `prisma/schema.prisma`, migrations)
 - Bot foundation: Discord gateway client, BullMQ job queues, Prisma-backed config stores, Components v2 message builder
 

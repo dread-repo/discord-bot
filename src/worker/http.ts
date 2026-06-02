@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 
+import type { GitHubEvents } from '../lib/config/github-events.js';
 import { isWatchedGitHubRepository } from '../lib/constants.js';
 import { loadEnv } from '../lib/env.js';
 import { logger } from '../lib/log.js';
@@ -26,22 +27,16 @@ function verifySignature(secret: string, body: Buffer, signatureHeader: string |
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-type GitHubEventName =
-  | 'push'
-  | 'pull_request'
-  | 'workflow_run'
-  | 'release'
-  | 'issues'
-  | 'deployment';
+type GitHubEventKey = keyof GitHubEvents;
 
-function mapEvent(githubEvent: string): GitHubEventName | null {
+function mapEvent(githubEvent: string): GitHubEventKey | null {
   switch (githubEvent) {
     case 'push':
       return 'push';
     case 'pull_request':
       return 'pull_request';
     case 'workflow_run':
-      return 'workflow_run';
+      return 'ci';
     case 'release':
       return 'release';
     case 'issues':
@@ -131,7 +126,11 @@ async function handleRequest(
     payload,
   });
 
-  logger.info('GitHub webhook enqueued', { deliveryId, event: internalEvent });
+  logger.info('GitHub webhook enqueued', {
+    deliveryId,
+    event: internalEvent,
+    repo: repoName,
+  });
   res.writeHead(200);
   res.end('ok');
 }
