@@ -1,0 +1,13 @@
+{
+  "title": "Dread Community Bot",
+  "sections": [
+    {
+      "heading": "Overview",
+      "body": "Discord bot for the dread-repo community — watchers, support forum tools, and moderation."
+    },
+    {
+      "heading": "Setup",
+      "body": "Administrators can configure Thunderstore and GitHub announcement channels with the setup commands."
+    }
+  ]
+}

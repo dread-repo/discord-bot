@@ -26,7 +26,7 @@ export default tseslint.config(
         ...globals.node,
       },
       parserOptions: {
-        projectService: true,
+        project: './tsconfig.eslint.json',
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -36,7 +36,7 @@ export default tseslint.config(
     settings: {
       'import-x/resolver-next': [
         createTypeScriptImportResolver({
-          project: ['./tsconfig.json'],
+          project: ['./tsconfig.eslint.json'],
         }),
         createNodeResolver(),
       ],

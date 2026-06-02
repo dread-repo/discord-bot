@@ -1,0 +1,7 @@
+{
+  "tags": {
+    "mod-bug": "dread-repo/dreadREPO",
+    "discord-bot": "dread-repo/discord-bot"
+  },
+  "classifierRepos": ["dread-repo/dreadREPO", "dread-repo/discord-bot"]
+}

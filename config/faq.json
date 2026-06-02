@@ -1,0 +1,12 @@
+{
+  "entries": [
+    {
+      "question": "Where do I download the mod?",
+      "answer": "Use `/download` for Thunderstore, r2modman, and GitHub links."
+    },
+    {
+      "question": "How do I get support?",
+      "answer": "Search existing forum threads first. Open a new forum post with a clear title and the right tag if your issue is new."
+    }
+  ]
+}

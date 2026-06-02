@@ -16,11 +16,11 @@
 
 **Status**: Toolchain and Docker skeleton exist — complete remaining setup.
 
-- [ ] T001 Add runtime dependencies in package.json: discord.js, bullmq, ioredis, @supabase/supabase-js, zod
-- [ ] T002 [P] Create directory layout per plan.md: src/bot, src/worker, src/lib, config, supabase/migrations, tests/unit
-- [ ] T003 [P] Add config JSON stubs: config/official-packages.json, faq.json, repo-tag-map.json, features.json, readme.json, downloads.json, dread-persona.md
-- [ ] T004 [P] Add env validation module in src/lib/env.ts (zod schema for DISCORD_TOKEN, REDIS_URL, SUPABASE_*, etc.)
-- [ ] T005 Update .env.example with all required keys from src/lib/env.ts
+- [x] T001 Add runtime dependencies in package.json: discord.js, bullmq, ioredis, @supabase/supabase-js, zod
+- [x] T002 [P] Create directory layout per plan.md: src/bot, src/worker, src/lib, config, supabase/migrations, tests/unit
+- [x] T003 [P] Add config JSON stubs: config/official-packages.json, faq.json, repo-tag-map.json, features.json, readme.json, downloads.json, dread-persona.md
+- [x] T004 [P] Add env validation module in src/lib/env.ts (zod schema for DISCORD_TOKEN, REDIS_URL, SUPABASE_*, etc.)
+- [x] T005 Update .env.example with all required keys from src/lib/env.ts
 
 ---
 

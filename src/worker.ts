@@ -1,9 +1,3 @@
-/** Worker entry (BullMQ consumers added in later Spec Kit tasks). */
-export function runWorker(): void {
-  // Intentionally empty until job queue wiring lands.
-}
+import { startWorker } from './worker/index.js'; // eslint-disable-line import-x/no-useless-path-segments -- Node ESM entry
 
-runWorker();
-
-// Keep process alive until queue consumers are registered.
-process.stdin.resume();
+startWorker();

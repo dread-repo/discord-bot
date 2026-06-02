@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Bot foundation: Discord gateway client, BullMQ job queues, Supabase config stores, Components v2 message builder
+- Worker: GitHub webhook HTTP server (`POST /webhooks/github`) and queue processor stubs
+- Slash commands: `/thunderstore setup`, `/github setup` with permission gates (US1)
+- Unit tests for permission resolver, container builder snapshots, and guild config store
 - GitHub Spec Kit (Specify) scaffolding and Cursor speckit skills
 - Agent docs hub (`docs/agents/`) inspired by [dreadREPO](https://github.com/dread-repo/dreadREPO)
 - Matt Pocock engineering skills under `.agents/skills/`
