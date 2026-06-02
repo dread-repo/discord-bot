@@ -12,8 +12,9 @@ RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
 COPY tsconfig.json ./
+COPY prisma ./prisma
 COPY src ./src
-RUN pnpm run build
+RUN pnpm exec prisma generate && pnpm run build
 
 FROM base AS runner
 ENV NODE_ENV=production
@@ -21,6 +22,8 @@ WORKDIR /app
 
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY --from=deps /app/node_modules ./node_modules
+COPY prisma ./prisma
+RUN pnpm exec prisma generate
 COPY --from=build /app/dist ./dist
 
 RUN groupadd --system app && useradd --system --gid app app \

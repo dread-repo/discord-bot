@@ -1,10 +1,9 @@
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 
-import type { SupabaseClient } from '@supabase/supabase-js';
-import { z } from 'zod';
+import type { PrismaClient } from '@prisma/client';
 
-import { getSupabase } from '../config/supabase.js';
+import { prisma } from '../db/prisma.js';
 
 export interface GlobalPackage {
   namespace: string;
@@ -23,7 +22,7 @@ interface OfficialPackagesFile {
 }
 
 export class GlobalPackageRegistry {
-  constructor(private readonly db: SupabaseClient = getSupabase()) {}
+  constructor(private readonly db: PrismaClient = prisma) {}
 
   async loadBundledDefaults(): Promise<GlobalPackage[]> {
     const filePath = path.join(process.cwd(), 'config', 'official-packages.json');
@@ -44,32 +43,26 @@ export class GlobalPackageRegistry {
     registeredBy: string,
     githubRepo?: string,
   ): Promise<void> {
-    const { error } = await this.db.from('global_packages').insert({
-      namespace,
-      name,
-      is_core: isCore,
-      github_repo: githubRepo ?? null,
-      registered_by: registeredBy,
+    await this.db.globalPackage.create({
+      data: {
+        namespace,
+        name,
+        isCore,
+        githubRepo: githubRepo ?? null,
+        registeredBy,
+      },
     });
-    if (error) throw error;
   }
 
   async listAll(): Promise<GlobalPackage[]> {
-    const { data, error } = await this.db
-      .from('global_packages')
-      .select('namespace, name, is_core, github_repo');
-    if (error) throw error;
-    const rowSchema = z.object({
-      namespace: z.string(),
-      name: z.string(),
-      is_core: z.boolean(),
-      github_repo: z.string().nullable(),
+    const rows = await this.db.globalPackage.findMany({
+      select: { namespace: true, name: true, isCore: true, githubRepo: true },
     });
-    return rowSchema.array().parse(data).map((row) => ({
+    return rows.map((row) => ({
       namespace: row.namespace,
       name: row.name,
-      isCore: row.is_core,
-      githubRepo: row.github_repo,
+      isCore: row.isCore,
+      githubRepo: row.githubRepo,
     }));
   }
 }

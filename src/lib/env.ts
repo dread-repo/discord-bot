@@ -5,8 +5,8 @@ const envSchema = z.object({
   DISCORD_APPLICATION_ID: z.string().min(1),
   DISCORD_DEV_GUILD_ID: z.string().min(1).optional(),
   REDIS_URL: z.url().default('redis://127.0.0.1:6379'),
-  SUPABASE_URL: z.url(),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  /** Supabase Postgres connection string (Project Settings → Database → URI). */
+  DATABASE_URL: z.url(),
   GITHUB_WEBHOOK_SECRET: z.string().min(1).optional(),
   WEBHOOK_PORT: z.coerce.number().int().positive().default(3000),
   LLM_API_KEY: z.string().min(1).optional(),

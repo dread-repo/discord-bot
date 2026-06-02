@@ -16,7 +16,7 @@
 
 **Status**: Toolchain and Docker skeleton exist — complete remaining setup.
 
-- [x] T001 Add runtime dependencies in package.json: discord.js, bullmq, ioredis, @supabase/supabase-js, zod
+- [x] T001 Add runtime dependencies in package.json: discord.js, bullmq, @prisma/client, zod
 - [x] T002 [P] Create directory layout per plan.md: src/bot, src/worker, src/lib, config, supabase/migrations, tests/unit
 - [x] T003 [P] Add config JSON stubs: config/official-packages.json, faq.json, repo-tag-map.json, features.json, readme.json, downloads.json, dread-persona.md
 - [x] T004 [P] Add env validation module in src/lib/env.ts (zod schema for DISCORD_TOKEN, REDIS_URL, SUPABASE_*, etc.)
@@ -30,22 +30,22 @@
 
 **⚠️ CRITICAL**: No user story work until this phase is complete
 
-- [ ] T006 Create Supabase migration 001_initial.sql for tables in data-model.md
-- [ ] T007 Implement Supabase client factory in src/lib/config/supabase.ts (service role)
-- [ ] T008 Implement GuildConfigStore in src/lib/config/guild-config-store.ts
-- [ ] T009 Implement WatcherDedupeStore in src/lib/dedupe/watcher-dedupe-store.ts
-- [ ] T010 Implement PermissionResolver in src/lib/permissions/permission-resolver.ts per contracts/slash-commands.md
-- [ ] T011 [P] Unit tests for PermissionResolver in tests/unit/permission-resolver.test.ts
-- [ ] T012 Implement ContainerMessageBuilder in src/lib/messages/container-message-builder.ts per contracts/container-message.md
-- [ ] T013 [P] Snapshot tests for ContainerMessageBuilder in tests/unit/container-message-builder.test.ts
-- [ ] T014 Implement JobQueue wrapper in src/lib/queue/job-queue.ts per contracts/job-queues.md
-- [ ] T015 Implement Discord bot client factory in src/bot/client.ts (intents, partials)
-- [ ] T016 Wire src/bot/index.ts: login, interactionCreate, messageCreate routers
-- [ ] T017 Wire src/worker/index.ts: Redis connection, register all processors, health log
-- [ ] T018 Implement worker HTTP server for GitHub webhook in src/worker/http.ts
-- [ ] T019 Implement slash command registrar in src/bot/register-commands.ts (deploy to dev guild first)
-- [ ] T020 Implement GlobalPackageRegistry in src/lib/packages/global-package-registry.ts
-- [ ] T021 Implement LlmGateway skeleton in src/lib/llm/llm-gateway.ts (budget gate + no-op adapter for tests)
+- [x] T006 Create Supabase migration 001_initial.sql for tables in data-model.md
+- [x] T007 Implement Prisma client in src/lib/db/prisma.ts (DATABASE_URL → Supabase Postgres)
+- [x] T008 Implement GuildConfigStore in src/lib/config/guild-config-store.ts
+- [x] T009 Implement WatcherDedupeStore in src/lib/dedupe/watcher-dedupe-store.ts
+- [x] T010 Implement PermissionResolver in src/lib/permissions/permission-resolver.ts per contracts/slash-commands.md
+- [x] T011 [P] Unit tests for PermissionResolver in tests/unit/permission-resolver.test.ts
+- [x] T012 Implement ContainerMessageBuilder in src/lib/messages/container-message-builder.ts per contracts/container-message.md
+- [x] T013 [P] Snapshot tests for ContainerMessageBuilder in tests/unit/container-message-builder.test.ts
+- [x] T014 Implement JobQueue wrapper in src/lib/queue/job-queue.ts per contracts/job-queues.md
+- [x] T015 Implement Discord bot client factory in src/bot/client.ts (intents, partials)
+- [x] T016 Wire src/bot/index.ts: login, interactionCreate, messageCreate routers
+- [x] T017 Wire src/worker/index.ts: Redis connection, register all processors, health log
+- [x] T018 Implement worker HTTP server for GitHub webhook in src/worker/http.ts
+- [x] T019 Implement slash command registrar in src/bot/register-commands.ts (deploy to dev guild first)
+- [x] T020 Implement GlobalPackageRegistry in src/lib/packages/global-package-registry.ts
+- [x] T021 Implement LlmGateway skeleton in src/lib/llm/llm-gateway.ts (budget gate + no-op adapter for tests)
 
 **Checkpoint**: Foundation ready — user story implementation can begin
 
@@ -59,11 +59,11 @@
 
 ### Implementation for User Story 1
 
-- [ ] T022 [P] [US1] Implement /thunderstore setup in src/lib/commands/thunderstore-setup.ts
-- [ ] T023 [P] [US1] Implement /github setup in src/lib/commands/github-setup.ts
-- [ ] T024 [US1] Register US1 commands in src/bot/register-commands.ts
-- [ ] T025 [US1] Route US1 commands in src/bot/handlers/interaction-create.ts with PermissionResolver
-- [ ] T026 [P] [US1] Unit tests for guild config store thunderstore/github upsert in tests/unit/guild-config-store.test.ts
+- [x] T022 [P] [US1] Implement /thunderstore setup in src/lib/commands/thunderstore-setup.ts
+- [x] T023 [P] [US1] Implement /github setup in src/lib/commands/github-setup.ts
+- [x] T024 [US1] Register US1 commands in src/bot/register-commands.ts
+- [x] T025 [US1] Route US1 commands in src/bot/handlers/interaction-create.ts with PermissionResolver
+- [x] T026 [P] [US1] Unit tests for guild config store thunderstore/github upsert in tests/unit/guild-config-store.test.ts
 
 **Checkpoint**: US1 independently testable
 
