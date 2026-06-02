@@ -3,5 +3,19 @@ alwaysApply: false
 ---
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan
+shell commands, and other important information, read the current plan:
+
+**Plan**: [specs/001-dread-community-bot/plan.md](../../specs/001-dread-community-bot/plan.md)
+
+**Key artifacts**:
+- [spec.md](../../specs/001-dread-community-bot/spec.md) — requirements & user stories
+- [research.md](../../specs/001-dread-community-bot/research.md) — technical decisions
+- [data-model.md](../../specs/001-dread-community-bot/data-model.md) — Supabase schema
+- [tasks.md](../../specs/001-dread-community-bot/tasks.md) — implementation checklist
+- [contracts/](../../specs/001-dread-community-bot/contracts/) — slash commands, queues, webhooks, Container layout
+- [quickstart.md](../../specs/001-dread-community-bot/quickstart.md) — manual acceptance
+
+**Stack**: TypeScript, Node 22, discord.js 14, BullMQ, Redis, Supabase, Docker Compose (bot + worker + redis), pnpm 11.
+
+**Branch**: `001-dread-community-bot`
 <!-- SPECKIT END -->

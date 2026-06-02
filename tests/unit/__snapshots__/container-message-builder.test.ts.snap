@@ -1,0 +1,51 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`ContainerMessageBuilder > builds announce container with Components v2 flag 1`] = `
+{
+  "components": [
+    {
+      "components": [
+        {
+          "content": "**dread** · dreadREPO
+v1.0.0 · 2026-06-02T12:00:00.000Z
+
+**Summary (LLM)** — full details on Thunderstore/GitHub.
+
+Release notes here.",
+          "type": 10,
+        },
+        {
+          "components": [
+            {
+              "label": "GitHub",
+              "style": 5,
+              "type": 2,
+              "url": "https://github.com/dread-repo/dreadREPO/releases/tag/v1.0.0",
+            },
+          ],
+          "type": 1,
+        },
+      ],
+      "type": 17,
+    },
+  ],
+  "flags": 32768,
+}
+`;
+
+exports[`ContainerMessageBuilder > builds simple text container 1`] = `
+{
+  "components": [
+    {
+      "components": [
+        {
+          "content": "Configured successfully.",
+          "type": 10,
+        },
+      ],
+      "type": 17,
+    },
+  ],
+  "flags": 32768,
+}
+`;

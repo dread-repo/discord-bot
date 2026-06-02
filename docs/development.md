@@ -27,7 +27,11 @@ pnpm test
 | `pnpm run build` | Compile `src/` → `dist/` |
 | `pnpm run typecheck` | Typecheck without emit |
 | `pnpm run lint` | ESLint (strict + import-x) |
-| `pnpm test` | Vitest (`src/**/*.test.ts`) |
+| `pnpm test` | Vitest (`tests/unit`, `src/**/*.test.ts`) |
+| `pnpm run db:generate` | Regenerate Prisma Client after schema changes |
+| `pnpm run db:migrate` | Apply migrations (`prisma migrate deploy`) |
+| `pnpm run db:migrate:dev` | Create/apply migrations in development |
+| `pnpm run db:studio` | Open Prisma Studio |
 | `pnpm start` / `pnpm run start:bot` | Run bot entry |
 | `pnpm run start:worker` | Run worker entry |
 
@@ -61,15 +65,47 @@ Copy the template and fill values as features land:
 cp .env.example .env
 ```
 
-| Variable | Used by | Status |
-|----------|---------|--------|
-| `DISCORD_TOKEN` | bot | Planned |
-| `REDIS_URL` | bot, worker | Set by Docker Compose to `redis://redis:6379` |
-| `SUPABASE_*` | bot, worker | Planned |
-| `GITHUB_WEBHOOK_SECRET` | worker | Planned |
-| `LLM_API_KEY` | worker | Planned |
+| Variable | Used by | Secret? |
+|----------|---------|---------|
+| `DISCORD_TOKEN` | bot | Yes |
+| `DISCORD_APPLICATION_ID` | bot | No |
+| `DISCORD_DEV_GUILD_ID` | bot | No |
+| `DATABASE_URL` | bot, worker (Prisma → Supabase Postgres) | Yes |
+| `REDIS_URL` | bot, worker | Sometimes |
+| `GITHUB_WEBHOOK_SECRET` | worker | Yes |
+| `LLM_API_KEY` | worker | Yes |
 
-Never commit `.env`.
+Never commit `.env`. In Cursor Cloud, register secrets as **runtime** variables (same names as above).
+
+### Database (Supabase + Prisma)
+
+Postgres is hosted on **Supabase**; the app uses **Prisma ORM** with `DATABASE_URL` (not the Supabase JS client).
+
+1. Supabase dashboard → **Project Settings** → **Database** → copy the **URI** (prefer the connection pooler on port `6543` for server apps).
+2. Set `DATABASE_URL` in `.env` or Cursor Cloud secrets.
+3. Apply schema:
+
+```bash
+pnpm run db:migrate
+```
+
+For local schema changes: `pnpm run db:migrate:dev`.
+
+### GitHub webhooks, smee.io, and Cloudflare Tunnel
+
+Full step-by-step setup (smee for local dev, `cloudflared` for HTTPS, env vars, Docker): **[README.md § Setup guide](../README.md#setup-guide)**.
+
+### Troubleshooting `Cannot find module .../typescript/bin/tsc`
+
+Usually a corrupted `node_modules` tree (interrupted install or sandbox `EPERM` during recreate):
+
+```bash
+rm -rf node_modules
+pnpm install
+pnpm run build
+```
+
+Ensure you are not using a project-local `.pnpm-store/` inside the repo; let pnpm use the global store.
 
 ## Docker
 

@@ -11,6 +11,10 @@ minimumReleaseAgeStrict: true
 
 # Explicit allow/deny for dependency lifecycle scripts (default: denied if omitted)
 allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
+  msgpackr-extract: false
+  prisma: true
   unrs-resolver: false
 
 # Fail install if a package with scripts is not listed in allowBuilds

@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-02
 
-**Status**: Draft
+**Status**: Planned
 
 **Input**: Multi-guild Discord bot for the dread-repo community: Thunderstore and GitHub watchers, LLM-assisted announcements, in-character Dread replies, official-guild support forum automation, utility commands, and guild-scoped moderation. All public bot surfaces use Discord Container (Components v2) messages. Deployed via Docker with Redis-backed job queue and Supabase per-guild configuration.
 
