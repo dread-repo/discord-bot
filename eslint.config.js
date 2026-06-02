@@ -13,6 +13,7 @@ export default tseslint.config(
       'coverage/',
       'eslint.config.js',
       'vitest.config.ts',
+      'prisma/migrations/',
     ],
   },
   eslint.configs.recommended,
@@ -75,6 +76,9 @@ export default tseslint.config(
     files: ['**/*.test.ts'],
     rules: {
       'no-console': 'off',
+      'import-x/first': 'off',
+      '@typescript-eslint/no-unsafe-assignment': 'off',
+      '@typescript-eslint/no-unsafe-member-access': 'off',
     },
   },
 );

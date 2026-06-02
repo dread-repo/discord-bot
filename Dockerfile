@@ -12,6 +12,7 @@ RUN pnpm install --frozen-lockfile
 
 FROM deps AS build
 COPY tsconfig.json ./
+COPY prisma ./prisma
 COPY src ./src
 RUN pnpm run build
 
@@ -22,6 +23,9 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml .npmrc ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist
+COPY --from=build /app/prisma ./prisma
+COPY scripts/docker-entrypoint.sh ./scripts/docker-entrypoint.sh
+RUN chmod +x ./scripts/docker-entrypoint.sh
 
 RUN groupadd --system app && useradd --system --gid app app \
   && chown -R app:app /app

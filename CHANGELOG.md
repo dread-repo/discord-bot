@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- Core platform (spec 002): Prisma schema and init migration, bot/worker bootstrap, BullMQ job queues with stub processors, guild/dedupe stores, permission resolver, announcement message builder, LLM gateway skeleton, `/platform-smoke` command, env validation, and config stubs
 - GitHub Spec Kit (Specify) scaffolding and Cursor speckit skills
 - Agent docs hub (`docs/agents/`) inspired by [dreadREPO](https://github.com/dread-repo/dreadREPO)
 - Matt Pocock engineering skills under `.agents/skills/`

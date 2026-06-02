@@ -1,0 +1,10 @@
+{
+  "packages": [
+    {
+      "namespace": "dread",
+      "name": "dread",
+      "isCore": true,
+      "githubRepo": "dread-repo/dreadREPO"
+    }
+  ]
+}

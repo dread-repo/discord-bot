@@ -1,0 +1,111 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model GuildConfig {
+  guildId                String   @id @map("guild_id")
+  botAdminRoleId         String?  @map("bot_admin_role_id")
+  dreadReplyChannelIds   String[] @default([]) @map("dread_reply_channel_ids")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  thunderstoreConfig GuildThunderstoreConfig?
+  githubConfig       GuildGithubConfig?
+  forumConfig        GuildForumConfig?
+  botAdmins          GuildBotAdmin[]
+
+  @@map("guild_config")
+}
+
+model GuildThunderstoreConfig {
+  guildId     String   @id @map("guild_id")
+  channelId   String   @map("channel_id")
+  pingRoleId  String   @map("ping_role_id")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  guild GuildConfig @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+
+  @@map("guild_thunderstore_config")
+}
+
+model GuildGithubConfig {
+  guildId   String   @id @map("guild_id")
+  channelId String   @map("channel_id")
+  events    Json     @map("events")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  guild GuildConfig @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+
+  @@map("guild_github_config")
+}
+
+model GuildForumConfig {
+  guildId         String   @id @map("guild_id")
+  forumChannelId  String   @map("forum_channel_id")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  guild GuildConfig @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+
+  @@map("guild_forum_config")
+}
+
+model GuildBotAdmin {
+  guildId String @map("guild_id")
+  userId  String @map("user_id")
+
+  guild GuildConfig @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+
+  @@id([guildId, userId])
+  @@map("guild_bot_admins")
+}
+
+model GlobalPackage {
+  id           String   @id @default(uuid()) @db.Uuid
+  namespace    String
+  name         String
+  isCore       Boolean  @map("is_core")
+  githubRepo   String?  @map("github_repo")
+  registeredBy String   @map("registered_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@unique([namespace, name])
+  @@map("global_packages")
+}
+
+model WatcherDedupe {
+  dedupeKey   String   @id @map("dedupe_key")
+  announcedAt DateTime @default(now()) @map("announced_at")
+
+  @@map("watcher_dedupe")
+}
+
+model ForumAttempt {
+  id            String   @id @default(uuid()) @db.Uuid
+  threadId      String   @map("thread_id")
+  guildId       String   @map("guild_id")
+  repo          String
+  querySummary  String   @map("query_summary")
+  answerSummary String   @map("answer_summary")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([threadId, createdAt])
+  @@map("forum_attempts")
+}
+
+model AnnouncementDraft {
+  id                String    @id @default(uuid()) @db.Uuid
+  guildId           String    @map("guild_id")
+  userId            String    @map("user_id")
+  content           String
+  llmFeedback       Json?     @map("llm_feedback")
+  targetChannelId   String?   @map("target_channel_id")
+  expiresAt         DateTime  @map("expires_at")
+
+  @@map("announcement_drafts")
+}

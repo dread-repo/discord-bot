@@ -5,17 +5,18 @@ alwaysApply: false
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan:
 
-**Plan**: [specs/001-dread-community-bot/plan.md](../../specs/001-dread-community-bot/plan.md)
+**Plan**: [specs/002-core-platform/plan.md](../../specs/002-core-platform/plan.md)
 
 **Key artifacts**:
-- [spec.md](../../specs/001-dread-community-bot/spec.md) — requirements & user stories
-- [research.md](../../specs/001-dread-community-bot/research.md) — technical decisions
-- [data-model.md](../../specs/001-dread-community-bot/data-model.md) — Supabase schema
-- [tasks.md](../../specs/001-dread-community-bot/tasks.md) — implementation checklist
-- [contracts/](../../specs/001-dread-community-bot/contracts/) — slash commands, queues, webhooks, Container layout
-- [quickstart.md](../../specs/001-dread-community-bot/quickstart.md) — manual acceptance
+- [spec.md](../../specs/002-core-platform/spec.md) — requirements & user stories
+- [research.md](../../specs/002-core-platform/research.md) — platform technical decisions
+- [data-model.md](../../specs/002-core-platform/data-model.md) — store scope (canonical tables in 001)
+- [tasks.md](../../specs/002-core-platform/tasks.md) — implementation checklist
+- [contracts/](../../specs/002-core-platform/contracts/) — env, permissions, platform APIs, smoke
+- [quickstart.md](../../specs/002-core-platform/quickstart.md) — platform acceptance
+- Epic [001 contracts](../001-dread-community-bot/contracts/) — job queues, container layout
 
-**Stack**: TypeScript, Node 22, discord.js 14, BullMQ, Redis, Supabase, Docker Compose (bot + worker + redis), pnpm 11.
+**Stack**: TypeScript, Node 22, discord.js 14, BullMQ, Redis, Prisma 7 + Supabase Postgres, Docker Compose (bot + worker + redis), pnpm 11.
 
-**Branch**: `001-dread-community-bot`
+**Branch**: `002-core-platform`
 <!-- SPECKIT END -->

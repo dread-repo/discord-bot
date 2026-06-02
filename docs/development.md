@@ -30,6 +30,53 @@ pnpm test
 | `pnpm test` | Vitest (`src/**/*.test.ts`) |
 | `pnpm start` / `pnpm run start:bot` | Run bot entry |
 | `pnpm run start:worker` | Run worker entry |
+| `pnpm db:generate` | Generate Prisma Client (planned) |
+| `pnpm db:migrate:dev` | Apply migrations in dev (`prisma migrate dev`) |
+| `pnpm db:migrate:deploy` | Apply migrations in CI/production |
+
+## Database (Supabase Postgres + Prisma)
+
+Persistence for the active feature ([PRD](../specs/001-dread-community-bot/PRD.md)): **Supabase hosts Postgres**; **Prisma** owns schema and queries. See [ADR 0002](adr/0002-prisma-on-supabase-postgres.md).
+
+### Prerequisites
+
+- Supabase project (cloud dev project recommended for v1)
+- Connection strings from **Project Settings → Database**
+
+| Variable | Connection | Used by |
+|----------|------------|---------|
+| `DATABASE_URL` | Transaction pooler, port **6543**, append `?pgbouncer=true` | Bot, worker (`PrismaClient`) |
+| `DIRECT_URL` | Direct host `db.<project-ref>.supabase.co:5432` | `prisma migrate`, `migrate deploy` |
+
+Never run migrations against the pooled URL (PgBouncer causes prepared-statement errors).
+
+### First-time schema setup
+
+```bash
+cp .env.example .env
+# Set DATABASE_URL and DIRECT_URL in .env
+
+pnpm install
+pnpm db:migrate:dev --name init   # creates prisma/migrations from schema
+pnpm db:generate
+pnpm run build
+```
+
+Verify tables in the Supabase Table Editor match [data-model.md](../specs/001-dread-community-bot/data-model.md).
+
+### Production / Docker
+
+Before starting bot or worker, apply pending migrations:
+
+```bash
+pnpm db:migrate:deploy
+```
+
+Docker Compose runs `scripts/docker-entrypoint.sh` before bot/worker, which calls `pnpm db:migrate:deploy` when `DATABASE_URL` or `DIRECT_URL` is set.
+
+### Tests
+
+Use a separate test database (Supabase branch/project or local Postgres) or mock stores at module boundaries. Do not point tests at production `DATABASE_URL`.
 
 ## Toolchain and security (pnpm)
 
@@ -63,13 +110,32 @@ cp .env.example .env
 
 | Variable | Used by | Status |
 |----------|---------|--------|
-| `DISCORD_TOKEN` | bot | Planned |
+| `DISCORD_TOKEN` | bot | Required |
+| `DISCORD_CLIENT_ID` | bot | Required (application id) |
+| `DISCORD_DEV_GUILD_ID` | bot | Optional — guild-scoped slash commands (instant); omit for global |
 | `REDIS_URL` | bot, worker | Set by Docker Compose to `redis://redis:6379` |
-| `SUPABASE_*` | bot, worker | Planned |
+| `DATABASE_URL` | bot, worker | Planned — Supabase pooler + `?pgbouncer=true` |
+| `DIRECT_URL` | migrate, CI | Planned — direct Postgres for Prisma CLI |
 | `GITHUB_WEBHOOK_SECRET` | worker | Planned |
 | `LLM_API_KEY` | worker | Planned |
 
 Never commit `.env`.
+
+### Slash commands
+
+On startup the bot calls the Discord REST API to register commands (`platform-smoke` today). You can also deploy without starting the gateway:
+
+```bash
+pnpm run build
+pnpm run deploy-commands
+```
+
+| Mode | Env | When commands appear |
+|------|-----|----------------------|
+| Guild (recommended for dev) | `DISCORD_DEV_GUILD_ID=<server id>` | Usually within seconds |
+| Global | leave `DISCORD_DEV_GUILD_ID` unset | Up to ~1 hour |
+
+Invite URL must include scope `applications.commands`. The bot must be in the guild when using `DISCORD_DEV_GUILD_ID`.
 
 ### Troubleshooting `Cannot find module .../typescript/bin/tsc`
 
@@ -121,6 +187,8 @@ docker compose up -d
 | `src/worker.ts` | Worker process entry |
 | `dist/` | Build output (gitignored) |
 | `specs/001-dread-community-bot/` | Active Spec Kit feature (spec, PRD, checklist) |
+| `prisma/` | Schema and migrations (planned) |
+| `prisma.config.ts` | Prisma 7 CLI config (planned) |
 
 ## Related docs
 
