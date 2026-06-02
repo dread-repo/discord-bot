@@ -103,3 +103,52 @@ Docker (bot + worker + Redis): `docker compose up` — see [docs/development.md]
 ## Release (maintainers)
 
 TBD until versioning is chosen. Maintain `## [Unreleased]` in [CHANGELOG.md](CHANGELOG.md) when shipping tagged releases.
+
+## Cursor Cloud specific instructions
+
+### Toolchain
+
+Node **22+** and **pnpm 11.5** via `corepack enable` (see `.node-version` and `packageManager` in `package.json`). Standard commands are in **Build and test** above and [docs/development.md](docs/development.md).
+
+### Tier 0 verify (no services)
+
+From repo root after `pnpm install`:
+
+```bash
+pnpm run build
+pnpm run typecheck
+pnpm test
+pnpm run lint
+```
+
+Vitest is configured with `passWithNoTests: true` (no `*.test.ts` files yet).
+
+### Lint (known state)
+
+`pnpm run lint` currently reports ESLint errors on the stub entry files `src/index.ts` and `src/worker.ts` (empty keep-alive `await` and `void main()`). Fix those when bot/worker wiring lands; do not treat a green lint as a given until then.
+
+### Running bot and worker locally
+
+After `pnpm run build`:
+
+```bash
+export REDIS_URL=redis://127.0.0.1:6379   # optional until queue code exists
+pnpm run start:bot    # or pnpm run start:worker
+```
+
+Stub entries use a top-level `await` on a never-settling promise. On Node 22 the runtime may exit with code **13** and an “unsettled top-level await” warning until real gateway/BullMQ wiring replaces that pattern. Tier 0 does not require long-running processes.
+
+### Redis without Docker
+
+Docker is **not** preinstalled on the default Cloud VM. For local BullMQ testing before Compose is available:
+
+```bash
+redis-server --daemonize yes --bind 127.0.0.1 --port 6379
+redis-cli ping   # expect PONG
+```
+
+Production-shaped stack: install Docker, then `docker compose build` and `docker compose up -d` per [docs/development.md#docker](docs/development.md#docker).
+
+### Secrets (Tier 1+)
+
+Live Discord testing needs `DISCORD_TOKEN` in `.env` (from `.env.example`). Compose sets `REDIS_URL` for `bot`/`worker` when using Docker. Do not commit `.env`.
