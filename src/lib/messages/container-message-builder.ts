@@ -5,6 +5,7 @@ import { ActionRowBuilder, ButtonBuilder, ContainerBuilder, TextDisplayBuilder }
 import {
   ButtonStyle,
   MessageFlags,
+  type ChatInputCommandInteraction,
   type InteractionReplyOptions,
   type MessageCreateOptions,
   type MessageEditOptions,
@@ -69,6 +70,33 @@ export function buildAnnounceContainer(meta: AnnounceMeta): SimpleTextOptions {
 
 export function buildEphemeralError(content: string): InteractionReplyOptions {
   return { content, flags: MessageFlags.Ephemeral };
+}
+
+/** Acknowledge slash command before slow work (DB, etc.) — Discord allows ~3s to first response. */
+export async function deferEphemeralCommand(
+  interaction: ChatInputCommandInteraction,
+): Promise<void> {
+  if (!interaction.deferred && !interaction.replied) {
+    await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+  }
+}
+
+export async function editEphemeralError(
+  interaction: ChatInputCommandInteraction,
+  content: string,
+): Promise<void> {
+  await interaction.editReply({ content });
+}
+
+export async function editEphemeralContainer(
+  interaction: ChatInputCommandInteraction,
+  content: string,
+): Promise<void> {
+  const container = buildSimpleContainer(content);
+  await interaction.editReply({
+    ...container,
+    flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
+  });
 }
 
 export function buildSimpleContainer(content: string): InteractionContainerReply {

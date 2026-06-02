@@ -1,8 +1,12 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { ChannelType, MessageFlags } from 'discord.js';
+import { ChannelType } from 'discord.js';
 
 import { GuildConfigStore } from '../config/guild-config-store.js';
-import { buildEphemeralError, buildSimpleContainer } from '../messages/container-message-builder.js';
+import {
+  deferEphemeralCommand,
+  editEphemeralContainer,
+  editEphemeralError,
+} from '../messages/container-message-builder.js';
 import { PermissionResolver } from '../permissions/permission-resolver.js';
 
 export async function executeThunderstoreSetup(
@@ -12,12 +16,14 @@ export async function executeThunderstoreSetup(
     guildConfig?: GuildConfigStore;
   } = {},
 ): Promise<void> {
+  await deferEphemeralCommand(interaction);
+
   const permissions = deps.permissions ?? new PermissionResolver();
   const guildConfig = deps.guildConfig ?? new GuildConfigStore();
 
   const gate = await permissions.can(interaction, 'config');
   if (!gate.allowed) {
-    await interaction.reply(buildEphemeralError(gate.reason));
+    await editEphemeralError(interaction, gate.reason);
     return;
   }
 
@@ -25,7 +31,7 @@ export async function executeThunderstoreSetup(
   const role = interaction.options.getRole('role', true);
 
   if (channel.type !== ChannelType.GuildText && channel.type !== ChannelType.GuildAnnouncement) {
-    await interaction.reply(buildEphemeralError('Channel must be a text or announcement channel.'));
+    await editEphemeralError(interaction, 'Channel must be a text or announcement channel.');
     return;
   }
 
@@ -33,11 +39,8 @@ export async function executeThunderstoreSetup(
   if (!guildId) return;
   await guildConfig.setThunderstoreConfig(guildId, channel.id, role.id);
 
-  const container = buildSimpleContainer(
+  await editEphemeralContainer(
+    interaction,
     `Thunderstore watcher configured.\nChannel: <#${channel.id}>\nPing role: <@&${role.id}>`,
   );
-  await interaction.reply({
-    ...container,
-    flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-  });
 }
