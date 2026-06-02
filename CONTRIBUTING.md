@@ -4,6 +4,7 @@
 
 | Resource | Purpose |
 |----------|---------|
+| [docs/development.md](docs/development.md) | **Local setup, pnpm, Docker, scripts** |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Backlog and priorities |
 | [docs/agents/README.md](docs/agents/README.md) | Agent orchestration hub |
 | [docs/agents/orchestration.md](docs/agents/orchestration.md) | Workflows and PR checklist |
@@ -12,21 +13,25 @@
 
 **Picking work:** Prefer issues labeled `ready-for-agent`. Comment before large changes.
 
-**Verify locally** (when scripts exist):
+## Verify locally
+
+From the repository root (Node 22+, pnpm 11):
 
 ```bash
-npm test
-npm run lint
+pnpm install
+pnpm run build
+pnpm test
+pnpm run lint
 ```
 
-## Building
-
-When `package.json` is present:
+Or with Docker:
 
 ```bash
-npm install
-npm run build
+docker compose build
+docker compose up -d
 ```
+
+See [docs/development.md](docs/development.md) for environment variables and supply-chain settings.
 
 ## Pull requests
 
@@ -38,3 +43,5 @@ npm run build
 ## Spec Kit features
 
 For larger features, use Spec Kit (`/speckit-specify` through `/speckit-implement`) and store artifacts under `specs/NNN-feature-name/`. Follow branch naming in [AGENTS.md](AGENTS.md).
+
+Active feature: [specs/001-dread-community-bot/](specs/001-dread-community-bot/).

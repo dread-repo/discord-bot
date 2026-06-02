@@ -28,7 +28,7 @@ Add entries as the codebase grows. Do not invent terms here without a correspond
 
 | Area | Path | Notes |
 |------|------|-------|
-| Source | `src/` (TBD) | Application entry and handlers |
-| Tests | `tests/` or `src/**/*.test.ts` (TBD) | Unit and integration tests |
+| Source | `src/` | Application entry and handlers |
+| Tests | `src/**/*.test.ts` | Unit and integration tests (Vitest) |
 | Specs | `specs/` | Spec Kit feature folders (`NNN-name`) |
 | Agent hub | `docs/agents/README.md` | Start here for agents |

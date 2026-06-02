@@ -63,22 +63,24 @@ Remote: `https://github.com/dread-repo/discord-bot`, default branch `main`.
 
 ## Build and test
 
-Run from repository root when `package.json` exists:
+Run from repository root:
 
 ```bash
-npm install
-npm run build
-npm test
-npm run lint
+pnpm install
+pnpm run build
+pnpm test
+pnpm run lint
 ```
 
-Until those scripts exist, update this section in the first implementation PR.
+`pnpm-workspace.yaml` enforces `minimumReleaseAge` (7 days), `strictDepBuilds`, and `allowBuilds` (only explicit `true` entries may run install scripts).
+
+Docker (bot + worker + Redis): `docker compose up` — see [docs/development.md](docs/development.md#docker).
 
 ## Verify
 
 | Tier | When | Command / doc |
 |------|------|----------------|
-| 0 | Every PR (static) | `npm test` and `npm run lint` when defined |
+| 0 | Every PR (static) | `pnpm test` and `pnpm run lint` |
 | 1+ | Optional integration | Add `docs/agents/verify-discord-bot.md` when live Discord testing is documented |
 
 ## Agent doc index

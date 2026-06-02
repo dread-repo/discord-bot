@@ -1,0 +1,17 @@
+packages:
+  - '.'
+
+engineStrict: true
+
+# 7 days in minutes — blocks freshly published package versions from resolving
+minimumReleaseAge: 10080
+
+# Reject install when a dependency would violate minimumReleaseAge
+minimumReleaseAgeStrict: true
+
+# Explicit allow/deny for dependency lifecycle scripts (default: denied if omitted)
+allowBuilds:
+  unrs-resolver: false
+
+# Fail install if a package with scripts is not listed in allowBuilds
+strictDepBuilds: true

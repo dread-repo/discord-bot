@@ -11,6 +11,7 @@ Entry point for coding agents (Cursor, Claude Code, Cloud Agents, and similar).
 | 3 | [docs/ROADMAP.md](../ROADMAP.md) | Backlog and execution order |
 | 4 | [orchestration.md](orchestration.md) | Issue → implement → verify → PR |
 | 5 | [AGENTS.md](../../AGENTS.md) | Build, Spec Kit, version control |
+| 6 | [development.md](../development.md) | pnpm, strict TS/ESLint, Docker |
 
 ## File index
 
@@ -20,6 +21,7 @@ Entry point for coding agents (Cursor, Claude Code, Cloud Agents, and similar).
 | [issue-tracker.md](issue-tracker.md) | GitHub Issues (`gh` CLI) |
 | [triage-labels.md](triage-labels.md) | Label vocabulary |
 | [domain.md](domain.md) | CONTEXT + ADR consumption |
+| [../development.md](../development.md) | Local setup, toolchain security, Docker |
 | [../../AGENTS.md](../../AGENTS.md) | Build and policy |
 | [guides/README.md](guides/README.md) | Implementation guides (add over time) |
 | [../../.agents/skills/](../../.agents/skills/) | Engineering + Spec Kit (`speckit-*`, Matt Pocock) skills |
