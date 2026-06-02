@@ -22,10 +22,18 @@ async function handleInteraction(interaction: Interaction): Promise<void> {
       command: interaction.commandName,
       error: err instanceof Error ? err.message : String(err),
     });
-    if (interaction.replied || interaction.deferred) {
-      await interaction.followUp(buildEphemeralError('Something went wrong running that command.'));
-    } else {
-      await interaction.reply(buildEphemeralError('Something went wrong running that command.'));
+    const payload = buildEphemeralError('Something went wrong running that command.');
+    try {
+      if (interaction.replied || interaction.deferred) {
+        await interaction.followUp(payload);
+      } else {
+        await interaction.reply(payload);
+      }
+    } catch (replyErr) {
+      logger.warn('Could not send command error reply', {
+        command: interaction.commandName,
+        error: replyErr instanceof Error ? replyErr.message : String(replyErr),
+      });
     }
   }
 }
