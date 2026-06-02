@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Changed
 
 - Replaced `@supabase/supabase-js` with Prisma Client; use `DATABASE_URL` (Supabase database URI) instead of `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY`
+
+### Documentation
+
+- README setup guide: Prisma/Supabase, Docker Compose, smee.io (local GitHub webhooks), Cloudflare Tunnel (`cloudflared`)
 - Worker: GitHub webhook HTTP server (`POST /webhooks/github`) and queue processor stubs
 - Slash commands: `/thunderstore setup`, `/github setup` with permission gates (US1)
 - Unit tests for permission resolver, container builder snapshots, and guild config store

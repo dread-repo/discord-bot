@@ -91,6 +91,10 @@ pnpm run db:migrate
 
 For local schema changes: `pnpm run db:migrate:dev`.
 
+### GitHub webhooks, smee.io, and Cloudflare Tunnel
+
+Full step-by-step setup (smee for local dev, `cloudflared` for HTTPS, env vars, Docker): **[README.md § Setup guide](../README.md#setup-guide)**.
+
 ### Troubleshooting `Cannot find module .../typescript/bin/tsc`
 
 Usually a corrupted `node_modules` tree (interrupted install or sandbox `EPERM` during recreate):
