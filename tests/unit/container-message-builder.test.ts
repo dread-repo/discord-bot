@@ -15,7 +15,7 @@ describe('ContainerMessageBuilder', () => {
       timestamp: new Date('2026-06-02T12:00:00.000Z'),
       body: 'Release notes here.',
       bodyIsLlmSummary: true,
-      githubUrl: 'https://github.com/dread-repo/dreadREPO/releases/tag/v1.0.0',
+      githubUrl: 'https://github.com/dread/dreadREPO/releases/tag/v1.0.0',
     });
 
     expect(result.flags).toBe(MessageFlags.IsComponentsV2);

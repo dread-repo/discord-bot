@@ -23,7 +23,7 @@ A server administrator connects the bot to their community by registering where 
 1. **Given** a member with Discord Administrator, bot-admin in that guild, or global admin (config rights), **When** they register a Thunderstore announcement channel and ping role, **Then** the guild’s Thunderstore updates are directed to that channel with that role mentioned on each announcement.
 2. **Given** an authorized config user, **When** they register a GitHub announcement channel and enable pushes, CI, and releases, **Then** only those event types produce messages in that channel.
 3. **Given** a user without config permission, **When** they attempt watcher setup, **Then** the bot denies the action with a clear ephemeral error.
-4. **Given** GitHub watcher is configured, **When** an enabled event occurs on `dread-repo/dreadREPO`, **Then** a single consolidated announcement appears in the configured channel with no role ping.
+4. **Given** GitHub watcher is configured, **When** an enabled event occurs on a repository in the `dread` GitHub organization, **Then** a single consolidated announcement appears in the configured channel with no role ping.
 
 ---
 
@@ -178,7 +178,7 @@ Any member can view bot features, readme content, and download links (Thundersto
 
 - **FR-001**: System MUST support multiple Discord guilds with per-guild configuration stored durably (channels, roles, enabled GitHub events, bot-admin assignments).
 - **FR-002**: System MUST hardcode official Dread guild ID `1510452344024727775` for global plugin registration and official-only forum registration.
-- **FR-003**: System MUST hardcode watched GitHub repository as `dread-repo/dreadREPO`.
+- **FR-003**: System MUST accept GitHub webhooks only for repositories under the `dread` organization.
 - **FR-004**: System MUST ship an official Thunderstore package manifest (JSON) for core and official plugins and watch all listed packages plus globally registered packages.
 - **FR-005**: System MUST post Thunderstore updates to one configured channel per guild with a configured ping role on each announcement.
 - **FR-006**: System MUST post GitHub updates to one configured channel per guild with configurable event categories: pushes to `master`, pull requests, CI/Actions, releases, issues, deployments.

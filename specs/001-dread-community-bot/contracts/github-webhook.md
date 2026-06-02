@@ -7,7 +7,7 @@
 - `X-GitHub-Event`: event type
 - `X-GitHub-Delivery`: unique delivery id (dedupe key)
 
-**Repository filter**: Only process events where `repository.full_name === 'dread-repo/dreadREPO'`.
+**Repository filter**: Only process events where `repository.full_name` is under the `dread` GitHub organization (e.g. `dread/discord-bot`, `dread/dreadREPO`).
 
 ## Event mapping → internal type
 

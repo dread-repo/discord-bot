@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 
-import { GITHUB_REPO_FULL } from '../lib/constants.js';
+import { isWatchedGitHubRepository } from '../lib/constants.js';
 import { loadEnv } from '../lib/env.js';
 import { logger } from '../lib/log.js';
 import { QUEUE_NAMES, JobQueue } from '../lib/queue/job-queue.js';
@@ -112,7 +112,7 @@ async function handleRequest(
       ? (payload as { repository: { full_name: string } }).repository.full_name
       : null;
 
-  if (repoName !== GITHUB_REPO_FULL) {
+  if (!repoName || !isWatchedGitHubRepository(repoName)) {
     res.writeHead(404);
     res.end();
     return;
