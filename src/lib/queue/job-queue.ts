@@ -3,14 +3,15 @@ import { Queue, Worker, type Job, type JobsOptions, type Processor } from 'bullm
 import { loadEnv } from '../env.js';
 import { logger } from '../log.js';
 
+/** BullMQ queue names (no `:` — disallowed in BullMQ 5.x). Logical ids: `watcher/thunderstore`, etc. */
 export const QUEUE_NAMES = {
-  thunderstore: 'watcher:thunderstore',
-  github: 'watcher:github',
-  changelogSummarize: 'llm:changelog-summarize',
-  announcementReview: 'llm:announcement-review',
-  forumPost: 'forum:post-pipeline',
-  repoScan: 'index:repo-scan',
-  dreadReply: 'llm:dread-reply',
+  thunderstore: 'watcher-thunderstore',
+  github: 'watcher-github',
+  changelogSummarize: 'llm-changelog-summarize',
+  announcementReview: 'llm-announcement-review',
+  forumPost: 'forum-post-pipeline',
+  repoScan: 'index-repo-scan',
+  dreadReply: 'llm-dread-reply',
 } as const;
 
 export type QueueName = (typeof QUEUE_NAMES)[keyof typeof QUEUE_NAMES];

@@ -13,6 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Changed
 
+- GitHub webhook watcher accepts any repository under the `dread` organization (was limited to `dread-repo/dreadREPO`)
 - Replaced `@supabase/supabase-js` with Prisma Client; use `DATABASE_URL` (Supabase database URI) instead of `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY`
 
 ### Documentation

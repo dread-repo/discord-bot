@@ -172,7 +172,7 @@ GitHub must send HTTPS POSTs to your app. On a laptop, use **smee.io** as a publ
 
 #### Step B — Configure GitHub
 
-Repo: **[dread-repo/dreadREPO](https://github.com/dread-repo/dreadREPO)** (hardcoded watcher).
+GitHub watcher: all repositories under the **[dread](https://github.com/dread)** organization (org-level webhook).
 
 1. **Settings** → **Webhooks** → **Add webhook**
 2. **Payload URL**: your smee URL (e.g. `https://smee.io/xxxxxxxx`)
@@ -310,7 +310,7 @@ Config commands (need admin/bot-admin per spec): `/thunderstore setup`, `/github
 | `Invalid environment` on start | All required env vars set (`DISCORD_*`, `DATABASE_URL`) |
 | Bot online but no slash commands | `DISCORD_APPLICATION_ID`, `DISCORD_DEV_GUILD_ID`, bot invited with `applications.commands` |
 | Webhook 401 | `GITHUB_WEBHOOK_SECRET` matches GitHub webhook secret |
-| Webhook 404 | URL must end with `/webhooks/github`; repo must be `dread-repo/dreadREPO` |
+| Webhook 404 | URL must end with `/webhooks/github`; payload repo must be under the `dread` org |
 | Jobs not running | `REDIS_URL` reachable; worker process running |
 | Prisma errors | Run `pnpm run db:migrate`; pooler URL for runtime, `DIRECT_URL` for migrate if needed |
 
