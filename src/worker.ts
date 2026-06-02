@@ -3,7 +3,7 @@ export function runWorker(): void {
   // Intentionally empty until job queue wiring lands.
 }
 
-void runWorker();
+runWorker();
 
 // Keep process alive until queue consumers are registered.
-await new Promise<never>(() => {});
+process.stdin.resume();

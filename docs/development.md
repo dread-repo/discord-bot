@@ -71,6 +71,18 @@ cp .env.example .env
 
 Never commit `.env`.
 
+### Troubleshooting `Cannot find module .../typescript/bin/tsc`
+
+Usually a corrupted `node_modules` tree (interrupted install or sandbox `EPERM` during recreate):
+
+```bash
+rm -rf node_modules
+pnpm install
+pnpm run build
+```
+
+Ensure you are not using a project-local `.pnpm-store/` inside the repo; let pnpm use the global store.
+
 ## Docker
 
 Production-shaped layout from the [PRD](../specs/001-dread-community-bot/PRD.md): three services from one image.
