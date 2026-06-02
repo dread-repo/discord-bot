@@ -108,6 +108,10 @@ async function handleRequest(
       : null;
 
   if (!repoName || !isWatchedGitHubRepository(repoName)) {
+    logger.info('GitHub webhook ignored (repo not in watched orgs)', {
+      repo: repoName,
+      watchedOrgs: ['dread', 'dread-repo'],
+    });
     res.writeHead(404);
     res.end();
     return;
