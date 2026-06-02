@@ -19,6 +19,12 @@
       "skillPath": "skills/engineering/diagnose/SKILL.md",
       "computedHash": "15939a26f86edec2d4862042b8564e5a062cb81d04e047a0cea6305c8830b5f5"
     },
+    "discord-bot-architect": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/discord-bot-architect/SKILL.md",
+      "computedHash": "11e722b57ad28bc1919069ef3e82e627033373631e5647100356bc9181a51f68"
+    },
     "edit-article": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -109,6 +115,12 @@
       "skillPath": "skills/misc/setup-pre-commit/SKILL.md",
       "computedHash": "f9aeedf0a1f560ec465c3939c54434c2d949ac8b958a0493db52216f688a0366"
     },
+    "slack-bot-builder": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/slack-bot-builder/SKILL.md",
+      "computedHash": "d52ac2f407c909ba12eedabd7a4fc4fa6710c697130ea87a2d87fd11e24cafe0"
+    },
     "tdd": {
       "source": "mattpocock/skills",
       "sourceType": "github",
@@ -144,6 +156,18 @@
       "sourceType": "github",
       "skillPath": "skills/deprecated/ubiquitous-language/SKILL.md",
       "computedHash": "c8968b02b83c365bc81d85cc17fb4c8854b80f5b6dece322164fff5b00142231"
+    },
+    "voice-agents": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/voice-agents/SKILL.md",
+      "computedHash": "04fa9f9982a23f661db3e79198982ef3a29c4c7fce3b56a4456f9dc02a89b124"
+    },
+    "workflow-automation": {
+      "source": "sickn33/antigravity-awesome-skills",
+      "sourceType": "github",
+      "skillPath": "skills/workflow-automation/SKILL.md",
+      "computedHash": "319735806dfa030f82ed7606c32f3beca038966d9383aeb6513a008171f3537e"
     },
     "write-a-skill": {
       "source": "mattpocock/skills",

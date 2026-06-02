@@ -28,8 +28,8 @@ Initialized with [GitHub Spec Kit](https://github.com/github/spec-kit). In Curso
 - `/speckit-tasks` — actionable tasks
 - `/speckit-implement` — execute tasks
 
-Artifacts live under `specs/` and `.specify/`. See [AGENTS.md](AGENTS.md) for when Spec Kit vs plain issues applies.
+Artifacts live under `specs/` and `.specify/`. Spec Kit skills (`/speckit-*`) live in [`.agents/skills/`](.agents/skills/) alongside other agent skills. See [AGENTS.md](AGENTS.md) for when Spec Kit vs plain issues applies.
 
-## Engineering skills (Matt Pocock)
+## Agent skills
 
-Project-local skills are under [`.agents/skills/`](.agents/skills/) (from [mattpocock/skills](https://github.com/mattpocock/skills)). Repo config for `triage`, `to-issues`, `tdd`, etc. is in [docs/agents/](docs/agents/). Run `/setup-matt-pocock-skills` once if those docs are missing or stale.
+Project-local skills are under [`.agents/skills/`](.agents/skills/): Spec Kit (`speckit-*`) and [mattpocock/skills](https://github.com/mattpocock/skills). Repo config for `triage`, `to-issues`, `tdd`, etc. is in [docs/agents/](docs/agents/). Run `/setup-matt-pocock-skills` once if those docs are missing or stale.

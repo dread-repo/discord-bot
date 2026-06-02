@@ -22,8 +22,7 @@ Entry point for coding agents (Cursor, Claude Code, Cloud Agents, and similar).
 | [domain.md](domain.md) | CONTEXT + ADR consumption |
 | [../../AGENTS.md](../../AGENTS.md) | Build and policy |
 | [guides/README.md](guides/README.md) | Implementation guides (add over time) |
-| [../../.agents/skills/](../../.agents/skills/) | Matt Pocock engineering skills |
-| [../../.cursor/skills/](../../.cursor/skills/) | Spec Kit (speckit-*) skills |
+| [../../.agents/skills/](../../.agents/skills/) | Engineering + Spec Kit (`speckit-*`, Matt Pocock) skills |
 | [../../.claude/](../../.claude/) | Subagent prompt templates |
 
 ## Spec Kit vs plain issues
