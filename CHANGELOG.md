@@ -9,9 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - GitHub webhook announce processor: posts Container messages to guild channels configured via `/github setup` (push to default branch, PR, CI, release, issues, deployment)
-
-### Added
-
+- Thunderstore watcher: polls official/global packages every 5 minutes and announces new versions with role ping via `/thunderstore setup`
 - Prisma ORM for Postgres on Supabase (`DATABASE_URL`, `prisma/schema.prisma`, migrations)
 - Bot foundation: Discord gateway client, BullMQ job queues, Prisma-backed config stores, Components v2 message builder
 

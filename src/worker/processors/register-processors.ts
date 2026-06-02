@@ -1,16 +1,25 @@
 import { logger } from '../../lib/log.js';
 import { QUEUE_NAMES, JobQueue } from '../../lib/queue/job-queue.js';
+import { runThunderstorePoll } from '../../lib/watchers/thunderstore-watcher.js';
 import { processGitHubAnnounceJob } from './github-announce.js';
+import { processThunderstoreAnnounceJob } from './thunderstore-announce.js';
 
 const noop = async (): Promise<void> => {
   await Promise.resolve();
 };
 
-/** Registers BullMQ workers with no-op processors until story phases wire real handlers. */
-export function registerProcessors(queue = new JobQueue()): void {
+/** Registers BullMQ workers; returns the shared queue for schedulers and HTTP. */
+export function registerProcessors(queue = new JobQueue()): JobQueue {
   queue.createWorker(QUEUE_NAMES.thunderstore, async (job) => {
-    logger.debug('watcher:thunderstore job', { name: job.name, id: job.id });
-    await noop();
+    if (job.name === 'poll') {
+      await runThunderstorePoll({ queue });
+      return;
+    }
+    if (job.name === 'announce') {
+      await processThunderstoreAnnounceJob(job);
+      return;
+    }
+    logger.warn('Unknown thunderstore job', { name: job.name, id: job.id });
   }, 1);
 
   queue.createWorker(QUEUE_NAMES.github, async (job) => {
@@ -43,4 +52,5 @@ export function registerProcessors(queue = new JobQueue()): void {
   }, 2);
 
   logger.info('BullMQ processors registered');
+  return queue;
 }
