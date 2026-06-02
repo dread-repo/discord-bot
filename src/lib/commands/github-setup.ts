@@ -1,9 +1,13 @@
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { ChannelType, MessageFlags } from 'discord.js';
+import { ChannelType } from 'discord.js';
 
 import { GuildConfigStore } from '../config/guild-config-store.js';
 import { type GitHubEvents } from '../config/github-events.js';
-import { buildEphemeralError, buildSimpleContainer } from '../messages/container-message-builder.js';
+import {
+  deferEphemeralCommand,
+  editEphemeralContainer,
+  editEphemeralError,
+} from '../messages/container-message-builder.js';
 import { PermissionResolver } from '../permissions/permission-resolver.js';
 
 export async function executeGitHubSetup(
@@ -13,18 +17,20 @@ export async function executeGitHubSetup(
     guildConfig?: GuildConfigStore;
   } = {},
 ): Promise<void> {
+  await deferEphemeralCommand(interaction);
+
   const permissions = deps.permissions ?? new PermissionResolver();
   const guildConfig = deps.guildConfig ?? new GuildConfigStore();
 
   const gate = await permissions.can(interaction, 'config');
   if (!gate.allowed) {
-    await interaction.reply(buildEphemeralError(gate.reason));
+    await editEphemeralError(interaction, gate.reason);
     return;
   }
 
   const channel = interaction.options.getChannel('channel', true);
   if (channel.type !== ChannelType.GuildText && channel.type !== ChannelType.GuildAnnouncement) {
-    await interaction.reply(buildEphemeralError('Channel must be a text or announcement channel.'));
+    await editEphemeralError(interaction, 'Channel must be a text or announcement channel.');
     return;
   }
 
@@ -46,11 +52,8 @@ export async function executeGitHubSetup(
     .map(([k]) => k)
     .join(', ');
 
-  const container = buildSimpleContainer(
+  await editEphemeralContainer(
+    interaction,
     `GitHub watcher configured.\nChannel: <#${channel.id}>\nEvents: ${enabled || 'none (enable at least one)'}`,
   );
-  await interaction.reply({
-    ...container,
-    flags: MessageFlags.IsComponentsV2 | MessageFlags.Ephemeral,
-  });
 }

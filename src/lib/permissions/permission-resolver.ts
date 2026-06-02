@@ -32,8 +32,9 @@ export class PermissionResolver {
     const userId = interaction.user.id;
 
     const isDiscordAdmin = guildMember.permissions.has('Administrator');
-    const isBotAdmin = await this.guildConfig.isBotAdmin(guildId, userId);
+    const isBotAdmin = isDiscordAdmin ? false : await this.guildConfig.isBotAdmin(guildId, userId);
     const isGlobalAdmin =
+      !isDiscordAdmin &&
       guildId !== OFFICIAL_GUILD_ID &&
       (await this.guildConfig.isBotAdmin(OFFICIAL_GUILD_ID, userId));
 
