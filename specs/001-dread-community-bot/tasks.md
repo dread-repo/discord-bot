@@ -1,4 +1,6 @@
-# Tasks: Dread Community Discord Bot
+# Tasks: Dread Community Discord Bot (monolith — superseded)
+
+> **Split 2026-06-02**: Use per-feature `tasks.md` under [SPEC-INDEX](../SPEC-INDEX.md) (`002`–`010`). This file remains a historical rollup; new work tracks child specs.
 
 **Input**: [spec.md](./spec.md) · [plan.md](./plan.md) · [data-model.md](./data-model.md) · [contracts/](./contracts/)
 
@@ -16,10 +18,10 @@
 
 **Status**: Toolchain and Docker skeleton exist — complete remaining setup.
 
-- [ ] T001 Add runtime dependencies in package.json: discord.js, bullmq, ioredis, @supabase/supabase-js, zod
-- [ ] T002 [P] Create directory layout per plan.md: src/bot, src/worker, src/lib, config, supabase/migrations, tests/unit
+- [ ] T001 Add runtime dependencies in package.json: discord.js, bullmq, ioredis, prisma, @prisma/client, @prisma/adapter-pg, pg, zod; add `db:generate`, `db:migrate:dev`, `db:migrate:deploy` scripts; wire `build` → `prisma generate && tsc`; add Prisma packages to `pnpm-workspace.yaml` `allowBuilds` after review
+- [ ] T002 [P] Create directory layout per plan.md: src/bot, src/worker, src/lib (incl. `src/lib/db`), config, prisma/, tests/unit
 - [ ] T003 [P] Add config JSON stubs: config/official-packages.json, faq.json, repo-tag-map.json, features.json, readme.json, downloads.json, dread-persona.md
-- [ ] T004 [P] Add env validation module in src/lib/env.ts (zod schema for DISCORD_TOKEN, REDIS_URL, SUPABASE_*, etc.)
+- [ ] T004 [P] Add env validation module in src/lib/env.ts (zod schema for DISCORD_TOKEN, REDIS_URL, DATABASE_URL, DIRECT_URL, etc.)
 - [ ] T005 Update .env.example with all required keys from src/lib/env.ts
 
 ---
@@ -30,8 +32,8 @@
 
 **⚠️ CRITICAL**: No user story work until this phase is complete
 
-- [ ] T006 Create Supabase migration 001_initial.sql for tables in data-model.md
-- [ ] T007 Implement Supabase client factory in src/lib/config/supabase.ts (service role)
+- [ ] T006 Add `prisma/schema.prisma` from data-model.md, `prisma.config.ts` (datasource `DIRECT_URL`), and initial migration via `pnpm db:migrate:dev --name init`
+- [ ] T007 Implement Prisma client factory in src/lib/db/prisma.ts (`PrismaClient` + `@prisma/adapter-pg`; `$disconnect` on shutdown)
 - [ ] T008 Implement GuildConfigStore in src/lib/config/guild-config-store.ts
 - [ ] T009 Implement WatcherDedupeStore in src/lib/dedupe/watcher-dedupe-store.ts
 - [ ] T010 Implement PermissionResolver in src/lib/permissions/permission-resolver.ts per contracts/slash-commands.md
@@ -217,7 +219,7 @@
 
 - [ ] T067 [P] Add structured logging (pino) in src/lib/log.ts used by bot and worker
 - [ ] T068 [P] Add CHANGELOG [Unreleased] entries for user-visible features
-- [ ] T069 Update docs/development.md with Supabase migrate and webhook URL setup
+- [ ] T069 Update docs/development.md with Prisma migrate workflow, Supabase connection URLs, and GitHub webhook URL setup
 - [ ] T070 Update CONTEXT.md glossary (Interaction, Container, Guild config)
 - [ ] T071 Run quickstart.md Tier 0 validation and document Tier 1 gaps in docs/agents/verify-discord-bot.md
 - [ ] T072 [P] Add docker compose healthchecks for bot/worker processes

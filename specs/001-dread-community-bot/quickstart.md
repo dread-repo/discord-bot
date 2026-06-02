@@ -7,9 +7,9 @@ Manual acceptance scenarios for Tier 1 (when Discord test guild available).
 - Test Discord server with Administrator access
 - Bot invited with scopes: `bot`, `applications.commands`
 - Intents: Guilds, GuildMessages, MessageContent (forum + dread channels)
-- `.env` from `.env.example` filled
-- Supabase migrations applied
-- `docker compose up` OR `pnpm run start:bot` + `pnpm run start:worker`
+- `.env` from `.env.example` filled (`DATABASE_URL`, `DIRECT_URL` from Supabase project settings)
+- Prisma migrations applied: `pnpm db:migrate:deploy` (or `pnpm db:migrate:dev` on first setup)
+- `docker compose up` OR `pnpm run start:bot` + `pnpm run start:worker` (Compose should run migrate deploy before bot/worker when wired)
 
 ## QS1: Watcher setup (US1)
 
@@ -71,6 +71,7 @@ Manual acceptance scenarios for Tier 1 (when Discord test guild available).
 
 ```bash
 pnpm install
+pnpm db:generate
 pnpm run build
 pnpm run lint
 pnpm test

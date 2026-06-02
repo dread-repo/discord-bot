@@ -6,15 +6,15 @@
 
 ## Summary
 
-Build a multi-guild Discord bot for the dread-repo community: Thunderstore and GitHub announcement watchers, LLM-assisted staff announcements, official-guild support forum automation, guild-scoped moderation, utility commands, and optional in-character Dread replies. All public output uses **Components v2 (Container)** messages. **Bot** and **worker** processes share a Docker image; **BullMQ** on **Redis** runs heavy work; **Supabase Postgres** stores guild config and dedupe state.
+Build a multi-guild Discord bot for the dread-repo community: Thunderstore and GitHub announcement watchers, LLM-assisted staff announcements, official-guild support forum automation, guild-scoped moderation, utility commands, and optional in-character Dread replies. All public output uses **Components v2 (Container)** messages. **Bot** and **worker** processes share a Docker image; **BullMQ** on **Redis** runs heavy work; **Supabase-hosted Postgres** stores guild config and dedupe state, accessed via **Prisma ORM 7** (see [PRD.md](./PRD.md) persistence section).
 
 ## Technical Context
 
 **Language/Version**: TypeScript 5.8+ on Node.js 22+
 
-**Primary Dependencies**: discord.js 14.19+, bullmq 5.x, ioredis 5.x, @supabase/supabase-js 2.x, zod 3.x (validation), undici (HTTP)
+**Primary Dependencies**: discord.js 14.19+, bullmq 5.x, ioredis 5.x, prisma 7.x, @prisma/client, @prisma/adapter-pg, pg, zod 3.x (validation), undici (HTTP)
 
-**Storage**: Supabase Postgres (config, dedupe, forum attempts, drafts); Redis (queues); bundled JSON in `config/`
+**Storage**: Supabase Postgres via Prisma (config, dedupe, forum attempts, drafts); Redis (queues); bundled JSON in `config/`. Schema: `prisma/schema.prisma`; migrations: `prisma/migrations/`. No `@supabase/supabase-js` in v1.
 
 **Testing**: Vitest (unit + snapshot); fixture tests for webhooks and Container builder
 
@@ -77,6 +77,7 @@ src/
 ├── lib/
 │   ├── permissions/
 │   ├── messages/                # ContainerMessageBuilder
+│   ├── db/                      # PrismaClient singleton
 │   ├── config/                  # GuildConfigStore, JSON loaders
 │   ├── packages/                # GlobalPackageRegistry
 │   ├── dedupe/
@@ -94,8 +95,10 @@ config/
 ├── readme.json
 ├── downloads.json
 └── dread-persona.md
-supabase/
-└── migrations/
+prisma/
+├── schema.prisma
+├── migrations/
+prisma.config.ts
 tests/
 ├── unit/
 ├── fixtures/
@@ -109,13 +112,13 @@ tests/
 | Violation | Why Needed | Simpler Alternative Rejected Because |
 |-----------|------------|-------------------------------------|
 | Two processes | FR-026 interaction time limits | Single process blocks on LLM/repo scan |
-| Supabase + Redis | Durable config vs ephemeral queues | Redis-only loses audit; Postgres-only poor queue fit |
+| Supabase Postgres + Prisma + Redis | Durable typed data vs ephemeral queues | Redis-only loses audit; Postgres-only poor queue fit; Supabase JS REST not needed for v1 SQL access |
 
 ## Phase mapping (implementation)
 
 | Phase | Spec stories | Deliverable |
 |-------|--------------|-------------|
-| Foundational | — | Client, DB, queue, permissions, Container builder |
+| Foundational | — | Client, Prisma schema + migrate + client factory, queue, permissions, Container builder |
 | P1 | US1, US2, US3 | Config + watchers |
 | P2 | US4–US7 | Announcements, forum, mod, plugins |
 | P3 | US8, US9 | Dread replies + utilities |

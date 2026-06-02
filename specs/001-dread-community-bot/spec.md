@@ -4,9 +4,9 @@
 
 **Created**: 2026-06-02
 
-**Status**: Planned
+**Status**: Split — see [EPIC.md](./EPIC.md) and [SPEC-INDEX.md](../SPEC-INDEX.md). Implement via child specs `002`–`010`.
 
-**Input**: Multi-guild Discord bot for the dread-repo community: Thunderstore and GitHub watchers, LLM-assisted announcements, in-character Dread replies, official-guild support forum automation, utility commands, and guild-scoped moderation. All public bot surfaces use Discord Container (Components v2) messages. Deployed via Docker with Redis-backed job queue and Supabase per-guild configuration.
+**Input**: Multi-guild Discord bot for the dread-repo community: Thunderstore and GitHub watchers, LLM-assisted announcements, in-character Dread replies, official-guild support forum automation, utility commands, and guild-scoped moderation. All public bot surfaces use Discord Container (Components v2) messages. Deployed via Docker with Redis-backed job queue and per-guild configuration in Supabase Postgres (Prisma ORM).
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -230,7 +230,7 @@ Any member can view bot features, readme content, and download links (Thundersto
 ## Assumptions
 
 - Discord application has required intents approved (including Message Content for forum and allowlisted Dread reply channels).
-- Supabase project is available for configuration and state; service credentials are provided to bot and worker via environment.
+- Supabase Postgres project is available for configuration and state; bot and worker receive `DATABASE_URL` (pooled) and `DIRECT_URL` (migrations) via environment — see [PRD.md](./PRD.md).
 - GitHub webhooks can reach the deployment (TLS endpoint on VPS).
 - Thunderstore exposes stable package/version metadata and changelog fields for watched packages.
 - LLM API key and budget limits are configured via environment; soft gates are acceptable when budget is exhausted.

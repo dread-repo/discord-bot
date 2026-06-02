@@ -27,7 +27,25 @@ Work top to bottom. Respect **Depends on** unless the dependency is explicitly d
 | 2 | BOOT-2 | P0 | TBD | BOOT-1 | CI: lint + test on PR |
 | 3 | BOOT-3 | P1 | TBD | BOOT-1 | `/speckit-constitution` filled for this repo |
 
-### Phase 1: First features
+### Phase 1: Dread Community Bot (Spec Kit split)
+
+See [specs/SPEC-INDEX.md](../specs/SPEC-INDEX.md). Implement in order:
+
+| Order | Spec | Priority | Depends on | Notes |
+|-------|------|----------|------------|-------|
+| 1 | `002-core-platform` | P0 | BOOT-1 | Prisma, bot/worker, Redis, permissions, Container builder |
+| 2 | `003-guild-watcher-config` | P1 | 002 | Watcher channel setup |
+| 3 | `004-thunderstore-watcher` | P1 | 003 | Thunderstore + global packages |
+| 3 | `005-github-watcher` | P1 | 003 | GitHub webhooks (parallel with 004) |
+| 4 | `006-staff-announcements` | P2 | 002, 003 | LLM announcement flow |
+| 5 | `007-support-forum` | P2 | 002 | Official guild forum |
+| 6 | `008-guild-moderation` | P2 | 002 | Mod + bot-admin |
+| 7 | `009-dread-replies` | P3 | 002, 003 | In-character replies |
+| 8 | `010-utility-commands` | P3 | 002 | /features, /readme, /download |
+
+Epic umbrella: [001-dread-community-bot/EPIC.md](../specs/001-dread-community-bot/EPIC.md).
+
+### Phase 2: Later features
 
 | Order | ID | Priority | Issue | Depends on | Notes |
 |-------|-----|----------|-------|------------|-------|

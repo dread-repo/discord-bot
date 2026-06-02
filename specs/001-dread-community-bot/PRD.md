@@ -1,7 +1,7 @@
 # PRD: Dread Community Discord Bot
 
-**Spec Kit feature**: `001-dread-community-bot`  
-**Branch**: `001-dread-community-bot`  
+**Spec Kit epic**: `001-dread-community-bot` (split into specs `002`–`010` — see [EPIC.md](./EPIC.md), [SPEC-INDEX.md](../SPEC-INDEX.md))  
+**Active implementation**: start with `002-core-platform` / branch `002-core-platform`  
 **Specification**: [spec.md](./spec.md)
 
 ## Problem Statement
@@ -20,7 +20,7 @@ Community members miss updates, staff repeat the same support answers, and annou
 
 Build a production Discord bot that:
 
-- Serves many guilds with per-guild configuration stored in Supabase
+- Serves many guilds with per-guild configuration stored in **Supabase Postgres**, accessed via **Prisma ORM** from bot and worker only
 - Uses Discord Container (Components v2) for all public-facing messages
 - Runs heavy work (watchers, LLM, repo scans) through a Redis-backed job queue with separate bot and worker Docker services
 - Watches Thunderstore (core + official plugins + globally registered packages) and GitHub (`dread-repo/dreadREPO`) with deduplicated announcements
@@ -64,7 +64,7 @@ Build a production Discord bot that:
 
 - **Two-process model**: Bot handles Discord gateway and interactions (ack within 3s, enqueue work). Worker consumes Redis (BullMQ) jobs and performs watchers, LLM calls, forum pipeline, repo scans, and channel posts via Discord REST.
 - **Docker Compose on VPS**: Services `bot`, `worker`, `redis` (self-hosted). Optional reverse proxy for GitHub webhooks TLS.
-- **Supabase (Postgres)**: Durable guild config, global packages, watcher dedupe state, forum attempts, optional announcement draft sessions. Service role from bot/worker only.
+- **Supabase Postgres + Prisma ORM 7**: Durable guild config, global packages, watcher dedupe state, forum attempts, optional announcement draft sessions. Bot and worker use a shared `PrismaClient` (`@prisma/adapter-pg`) over Postgres connection strings — not `@supabase/supabase-js` in v1. Schema and migrations are owned by **Prisma Migrate** (`prisma/schema.prisma`, `prisma/migrations/`); Supabase hosts the database only (dashboard, backups, optional future RLS). See [data-model.md](./data-model.md) and persistence section below.
 - **Hardcoded constants**: Official guild `1510452344024727775`; GitHub repo `dread-repo/dreadREPO`.
 - **Bundled JSON**: Official Thunderstore manifest, FAQ, repo-tag map, features/readme/downloads content.
 
@@ -74,9 +74,9 @@ Build a production Discord bot that:
 |--------|----------------|------------------|
 | **PermissionResolver** | Centralize Discord Administrator, bot-admin, global admin (config vs mod vs official-only commands) | `can(user, guild, action): Result` |
 | **ContainerMessageBuilder** | Build Components v2 payloads: watcher, announcement, utility, forum, moderation cards | `build(template, data): MessagePayload` |
-| **GuildConfigStore** | CRUD per-guild Thunderstore/GitHub/forum/admin settings | `getThunderstore(guildId)`, `setGitHubEvents(...)`, etc. |
-| **GlobalPackageRegistry** | Manifest load + Supabase global registrations + GitHub release URL mapping | `listWatchedPackages(): Package[]`, `registerGlobal(pkg)` |
-| **WatcherDedupeStore** | Idempotent announce decisions | `shouldAnnounce(key): boolean`, `markAnnounced(key)` |
+| **GuildConfigStore** | CRUD per-guild Thunderstore/GitHub/forum/admin settings via Prisma | `getThunderstore(guildId)`, `setGitHubEvents(...)`, etc. |
+| **GlobalPackageRegistry** | Manifest load + `global_packages` rows (Prisma) + GitHub release URL mapping | `listWatchedPackages(): Package[]`, `registerGlobal(pkg)` |
+| **WatcherDedupeStore** | Idempotent announce decisions (`watcher_dedupe` via Prisma) | `shouldAnnounce(key): boolean`, `markAnnounced(key)` |
 | **ThunderstoreWatcher** | Poll/check versions, enqueue announce jobs | `checkAll(): void` |
 | **GitHubWebhookHandler** | Validate signature, map event type, enqueue announce jobs | `handle(payload): void` |
 | **AnnounceJobProcessor** | Fetch changelog/body, optional LLM summarize, build Container, post to guild channels | `process(job): void` |
@@ -85,7 +85,7 @@ Build a production Discord bot that:
 | **ForumPipeline** | FAQ → duplicate → conditional codebase; staff button handlers | `onNewPost(thread)`, `onDuplicateAction(interaction)` |
 | **RepoRouter** | Tag map → LLM classifier → fallback command hint | `resolve(thread): Repo \| Fallback` |
 | **RepoScanner** | Shallow clone or GitHub tree read for support answers | `scan(repo, query): ScanResult` |
-| **ForumAttemptStore** | Persist attempts for thread context | `save(attempt)`, `history(threadId)` |
+| **ForumAttemptStore** | Persist attempts for thread context (`forum_attempts` via Prisma) | `save(attempt)`, `history(threadId)` |
 | **DreadReplyGate** | Allowlist, 1% probability, keyword match, channel blocklist | `shouldReply(message): boolean` |
 | **ModerationCommands** | Thin wrappers over Discord API with permission checks | standard slash handlers |
 | **UtilityContent** | Load and render JSON bundles | `getFeatures()`, `getReadme()`, `getDownloads()` |
@@ -104,10 +104,36 @@ Build a production Discord bot that:
 - Body: full text if under limit; else LLM summary with explicit label pointing to Thunderstore/GitHub.
 - Buttons: GitHub + Thunderstore (Thunderstore omitted on non-release GitHub events).
 
-### Supabase entities
+### Persistence (Prisma on Supabase Postgres)
 
-- `guild_config`, `guild_thunderstore`, `guild_github`, `guild_forum` (official only enforced in app)
-- `global_packages`, `watcher_state`, `forum_attempts`, optional `announcement_drafts`
+**Decision**: Supabase-hosted Postgres; **Prisma ORM 7** as the only schema/migration and query layer. Full column definitions: [data-model.md](./data-model.md).
+
+| Concern | Approach |
+|---------|----------|
+| **Schema source of truth** | `prisma/schema.prisma` + `prisma/migrations/` (not `supabase/migrations/`) |
+| **Runtime access** | Shared `PrismaClient` in `src/lib/db/prisma.ts` (bot + worker) |
+| **Migrations (dev)** | `pnpm db:migrate:dev` → `prisma migrate dev` (uses `DIRECT_URL`) |
+| **Migrations (deploy)** | `pnpm db:migrate:deploy` before bot/worker start in Docker/CI |
+| **Env** | `DATABASE_URL` (transaction pooler, `?pgbouncer=true`) for runtime; `DIRECT_URL` (direct host) for CLI/migrate |
+| **Supabase JS / REST** | Out of scope v1 unless Auth, Storage, or Realtime are added later |
+| **RLS** | Optional v2; v1 relies on server-side-only DB credentials (no anon client) |
+
+**Tables** (snake_case in DB, Prisma models aligned 1:1):
+
+- `guild_config`, `guild_thunderstore_config`, `guild_github_config`, `guild_forum_config`, `guild_bot_admins`
+- `global_packages`, `watcher_dedupe`, `forum_attempts`, `announcement_drafts`
+
+**Application rules** (not in Prisma): official-guild-only forum config; GitHub events JSON validation; dedupe via insert-with-conflict semantics (`skipDuplicates` or equivalent).
+
+```mermaid
+flowchart LR
+  Bot[bot] --> Prisma[PrismaClient]
+  Worker[worker] --> Prisma
+  Prisma --> Pooler[Supavisor pooler]
+  Pooler --> DB[(Supabase Postgres)]
+  Migrate[prisma migrate] --> Direct[Direct connection]
+  Direct --> DB
+```
 
 ### Job queues
 
@@ -115,7 +141,7 @@ Build a production Discord bot that:
 
 ### Phased delivery
 
-- P0: Docker, bot/worker/redis, Supabase migrations, interaction framework, Container builder, PermissionResolver, JobQueue
+- P0: Docker, bot/worker/redis, Prisma schema + initial migration + `PrismaClient` factory, interaction framework, Container builder, PermissionResolver, JobQueue
 - P1: Config commands, moderation, utility JSON commands
 - P2: Thunderstore watcher + global plugin register
 - P3: GitHub webhook + event toggles
@@ -127,8 +153,17 @@ Build a production Discord bot that:
 
 - discord.js (latest) with Components v2 / Container messages strictly for public output
 - BullMQ + self-hosted Redis
-- Supabase Postgres per postgres best practices (indexes on guild_id, unique dedupe keys, short transactions)
+- **Prisma ORM 7** (`prisma`, `@prisma/client`, `@prisma/adapter-pg`, `pg`) on **Supabase Postgres** — indexes on `guild_id`, unique dedupe keys, short transactions; lowercase snake_case table names; dev against Supabase cloud project recommended
 - LLM provider via env-configured adapter
+
+**Database env (required for bot/worker and migrate):**
+
+| Variable | Purpose |
+|----------|---------|
+| `DATABASE_URL` | Runtime: Supabase transaction pooler (port 6543) + `?pgbouncer=true` |
+| `DIRECT_URL` | Prisma CLI / `migrate deploy`: direct `db.<project-ref>.supabase.co:5432` |
+
+Do not use pooled URL for migrations (PgBouncer breaks `prisma migrate`). Do not commit connection strings.
 
 ## Testing Decisions
 
@@ -144,7 +179,7 @@ Build a production Discord bot that:
 |--------|----------|----------|
 | PermissionResolver | P0 | Table-driven matrix: global admin abroad, bot-admin, Discord admin |
 | ContainerMessageBuilder | P0 | Snapshots for watcher, announcement, utility templates |
-| WatcherDedupeStore | P1 | Unit: first announce yes, repeat no |
+| WatcherDedupeStore | P1 | Unit: first announce yes, repeat no (mock Prisma or test DB) |
 | GlobalPackageRegistry | P1 | Manifest merge with global registrations |
 | RepoRouter | P2 | Tag hit, classifier mock, fallback path |
 | AnnounceJobProcessor | P2 | Mock LlmGateway + builder; oversized changelog triggers summary flag |
@@ -156,6 +191,7 @@ Build a production Discord bot that:
 ### Integration tests
 
 - BullMQ job handlers with mocked Discord REST, GitHub, Thunderstore HTTP.
+- Store integration tests: separate test database URL (Supabase branch/project or local Postgres) or mock at `GuildConfigStore` / `WatcherDedupeStore` boundaries — never production.
 - No live Discord in CI; manual verify runbook for Tier 1 later.
 
 ### Prior art
@@ -174,5 +210,7 @@ Build a production Discord bot that:
 ## Further Notes
 
 - Specification: [spec.md](./spec.md)
-- Next steps: `/speckit-plan`, `/speckit-tasks`, implement on branch `001-dread-community-bot`
-- Implementation skills: discord-bot-architect, supabase, supabase-postgres-best-practices
+- Data model: [data-model.md](./data-model.md)
+- Persistence ADR (when added): `docs/adr/0002-prisma-on-supabase-postgres.md`
+- Next steps: align [plan.md](./plan.md), [research.md](./research.md) R3, and [tasks.md](./tasks.md) with this PRD; implement on branch `001-dread-community-bot`
+- Implementation skills: discord-bot-architect, supabase-postgres-best-practices (schema/query tuning on hosted Postgres); Prisma via project Prisma skills / Context7 docs

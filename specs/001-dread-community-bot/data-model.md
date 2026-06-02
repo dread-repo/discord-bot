@@ -1,7 +1,7 @@
 # Data Model: Dread Community Discord Bot
 
 **Feature**: `001-dread-community-bot`  
-**Store**: Supabase Postgres (+ bundled JSON for static content)
+**Store**: Supabase-hosted Postgres, schema and access via **Prisma ORM** (`prisma/schema.prisma`) — see [PRD.md](./PRD.md) and [docs/adr/0002-prisma-on-supabase-postgres.md](../../../docs/adr/0002-prisma-on-supabase-postgres.md). Bundled JSON for static content remains in `config/`.
 
 ## Entity relationship overview
 

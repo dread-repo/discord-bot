@@ -39,17 +39,29 @@
 | `index:repo-scan` | forum pipeline | worker |
 | `llm:dread-reply` | bot message event | worker |
 
-## R3: Persistence (Supabase Postgres)
+## R3: Persistence (Supabase Postgres + Prisma ORM)
 
-**Decision**: **Supabase** with SQL migrations in `supabase/migrations/`; bot/worker use **service role** server-side only (no anon client in v1).
+**Decision**: **Supabase-hosted Postgres** for storage; **Prisma ORM 7** (`prisma`, `@prisma/client`, `@prisma/adapter-pg`, `pg`) as the sole schema, migration, and query layer. Bot/worker share one `PrismaClient` factory (`src/lib/db/prisma.ts`). **Prisma Migrate** owns `prisma/schema.prisma` and `prisma/migrations/` — not `supabase/migrations/` or `@supabase/supabase-js` in v1.
 
-**Rationale**: Multi-guild config, dedupe state, forum attempts, global packages; aligns with user-requested supabase-postgres-best-practices skill.
+**Rationale**: Multi-guild config, dedupe state, forum attempts, global packages; type-safe stores; single migration source of truth; aligns with supabase-postgres-best-practices skill for hosted Postgres tuning.
 
 **Alternatives considered**:
 - SQLite per guild: rejected — multi-instance bot/worker needs shared state.
 - Redis-only state: rejected — durable config and audit trail need Postgres.
+- `@supabase/supabase-js` (REST) for CRUD: rejected — bot/worker only need SQL; avoids dual migration paths.
+- Supabase SQL migrations only (no ORM): rejected — project chose Prisma for schema and application access.
 
-**Postgres practices**: Index `guild_id`; unique constraints on dedupe keys; short transactions; RLS optional v1 (service role bypass) — add RLS in v2 if exposing client.
+**Connection model**:
+| Env | Use |
+|-----|-----|
+| `DATABASE_URL` | Runtime: Supabase transaction pooler (port 6543) + `?pgbouncer=true` |
+| `DIRECT_URL` | Prisma CLI / `migrate deploy`: direct `db.<ref>.supabase.co:5432` |
+
+`prisma.config.ts` datasource uses `DIRECT_URL` for migrate/introspect; runtime client uses `DATABASE_URL` via `@prisma/adapter-pg`.
+
+**Postgres practices**: Lowercase snake_case tables; index `guild_id`; unique dedupe keys; short transactions. RLS optional v2 — v1 uses server-side-only DB credentials (no anon client).
+
+**ADR**: [docs/adr/0002-prisma-on-supabase-postgres.md](../../../docs/adr/0002-prisma-on-supabase-postgres.md)
 
 ## R4: LLM provider
 
