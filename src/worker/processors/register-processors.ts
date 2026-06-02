@@ -1,5 +1,6 @@
 import { logger } from '../../lib/log.js';
 import { QUEUE_NAMES, JobQueue } from '../../lib/queue/job-queue.js';
+import { processGitHubAnnounceJob } from './github-announce.js';
 
 const noop = async (): Promise<void> => {
   await Promise.resolve();
@@ -13,8 +14,7 @@ export function registerProcessors(queue = new JobQueue()): void {
   }, 1);
 
   queue.createWorker(QUEUE_NAMES.github, async (job) => {
-    logger.debug('watcher:github job', { name: job.name, id: job.id });
-    await noop();
+    await processGitHubAnnounceJob(job);
   }, 5);
 
   queue.createWorker(QUEUE_NAMES.changelogSummarize, async (job) => {

@@ -23,3 +23,4 @@ build/
 
 # Optional: keep agent credentials out of git (see Specify init warning)
 # .cursor/mcp.json
+dump.rdb
