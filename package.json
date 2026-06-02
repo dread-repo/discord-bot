@@ -21,7 +21,7 @@
     "test:watch": "vitest",
     "start": "node dist/index.js",
     "start:bot": "node dist/bot/index.js",
-    "start:worker": "node dist/worker/index.js"
+    "start:worker": "node dist/worker.js"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

@@ -20,3 +20,8 @@ export async function startBot(): Promise<void> {
   await client.login(loadEnv().DISCORD_TOKEN);
 }
 
+void startBot().catch((err: unknown) => {
+  logger.error('Bot failed to start', { error: err instanceof Error ? err.message : String(err) });
+  process.exitCode = 1;
+});
+
