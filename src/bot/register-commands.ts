@@ -1,7 +1,8 @@
 import { REST, Routes } from 'discord.js';
 
-import type { BotEnv } from '../lib/env.js';
+import type { DeployEnv } from '../lib/env.js';
 import { logInfo } from '../lib/log.js';
+import { GITHUB_COMMAND, THUNDERSTORE_COMMAND } from './commands/watcher-config-commands.js';
 
 export const PLATFORM_SMOKE_COMMAND = {
   name: 'platform-smoke',
@@ -9,9 +10,15 @@ export const PLATFORM_SMOKE_COMMAND = {
   default_member_permissions: '8', // Administrator
 } as const;
 
-export async function deployPlatformCommands(env: BotEnv, guildId?: string): Promise<void> {
+export const BOT_COMMANDS = [
+  PLATFORM_SMOKE_COMMAND,
+  THUNDERSTORE_COMMAND,
+  GITHUB_COMMAND,
+] as const;
+
+export async function deployBotCommands(env: DeployEnv, guildId?: string): Promise<void> {
   const rest = new REST({ version: '10' }).setToken(env.DISCORD_TOKEN);
-  const body = [PLATFORM_SMOKE_COMMAND];
+  const body = [...BOT_COMMANDS];
 
   if (guildId !== undefined) {
     await rest.put(Routes.applicationGuildCommands(env.DISCORD_CLIENT_ID, guildId), { body });
@@ -22,3 +29,6 @@ export async function deployPlatformCommands(env: BotEnv, guildId?: string): Pro
   await rest.put(Routes.applicationCommands(env.DISCORD_CLIENT_ID), { body });
   logInfo(`[bot] deployed ${String(body.length)} global command(s)`);
 }
+
+/** @deprecated Use {@link deployBotCommands} */
+export const deployPlatformCommands = deployBotCommands;

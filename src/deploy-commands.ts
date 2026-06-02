@@ -1,11 +1,13 @@
-import { deployPlatformCommands } from './bot/register-commands.js';
-import { loadBotEnv } from './lib/env.js';
+import { deployBotCommands } from './bot/register-commands.js';
+import { loadDeployEnv } from './lib/env.js';
+import { loadEnvFile } from './lib/load-env-file.js';
 import { logError, logInfo } from './lib/log.js';
 
 async function main(): Promise<void> {
-  const env = loadBotEnv();
+  loadEnvFile();
+  const env = loadDeployEnv();
   const guildId = env.DISCORD_DEV_GUILD_ID;
-  await deployPlatformCommands(env, guildId);
+  await deployBotCommands(env, guildId);
   logInfo(
     guildId === undefined
       ? '[bot] global commands registered (may take up to ~1 hour to appear)'

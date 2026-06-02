@@ -13,7 +13,10 @@ export function getPrisma(): PrismaClient {
   if (!databaseUrl) {
     throw new Error('DATABASE_URL is required for Prisma');
   }
-  pool = new Pool({ connectionString: databaseUrl });
+  pool = new Pool({
+    connectionString: databaseUrl,
+    connectionTimeoutMillis: 10_000,
+  });
   const adapter = new PrismaPg(pool);
   prisma = new PrismaClient({ adapter });
   return prisma;

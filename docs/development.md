@@ -127,8 +127,10 @@ On startup the bot calls the Discord REST API to register commands (`platform-sm
 
 ```bash
 pnpm run build
-pnpm run deploy-commands
+pnpm run deploy-commands   # reads .env from repo root; Discord vars only
 ```
+
+`deploy-commands` loads `.env` automatically and only requires `DISCORD_TOKEN` and `DISCORD_CLIENT_ID` (not `DATABASE_URL` / `REDIS_URL`). Run it from the repo root so `.env` is found.
 
 | Mode | Env | When commands appear |
 |------|-----|----------------------|
