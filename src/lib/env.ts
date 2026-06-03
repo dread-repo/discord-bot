@@ -21,7 +21,11 @@ const botSchema = baseSchema.extend({
   DISCORD_DEV_GUILD_ID: z.string().min(1).optional(),
 });
 
-const workerSchema = baseSchema;
+const workerSchema = baseSchema.extend({
+  DISCORD_TOKEN: z.string().min(1),
+  DISCORD_CLIENT_ID: z.string().min(1),
+  THUNDERSTORE_POLL_INTERVAL_MS: z.coerce.number().int().positive().optional(),
+});
 
 const deploySchema = z.object({
   DISCORD_TOKEN: z.string().min(1),
