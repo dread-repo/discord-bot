@@ -25,6 +25,7 @@ const workerSchema = baseSchema.extend({
   DISCORD_TOKEN: z.string().min(1),
   DISCORD_CLIENT_ID: z.string().min(1),
   THUNDERSTORE_POLL_INTERVAL_MS: z.coerce.number().int().positive().optional(),
+  WEBHOOK_PORT: z.coerce.number().int().positive().default(61_952),
 });
 
 const deploySchema = z.object({
