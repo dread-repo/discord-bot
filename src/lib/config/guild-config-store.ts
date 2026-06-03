@@ -77,6 +77,10 @@ export class GuildConfigStore {
     return this.db.guildThunderstoreConfig.findUnique({ where: { guildId } });
   }
 
+  async listThunderstoreGuilds(): Promise<GuildThunderstoreConfig[]> {
+    return this.db.guildThunderstoreConfig.findMany();
+  }
+
   async upsertThunderstore(
     guildId: string,
     channelId: string,
