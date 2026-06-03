@@ -167,6 +167,15 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Suggest next steps if implementation cannot proceed
    - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
 
+8b. **Git commit after each task** (mandatory when `.specify/extensions/git-task-commit` is installed):
+   - Read [docs/agents/spec-kit-implement-commits.md](../../../docs/agents/spec-kit-implement-commits.md) from repo root.
+   - After marking `[X]` for task `T###`, run Tier 0 for that task when it touched code.
+   - Stage **only** that task's files and `FEATURE_DIR/tasks.md`: `git add <paths> FEATURE_DIR/tasks.md`
+   - Run `.specify/extensions/git-task-commit/scripts/bash/commit-task.sh T###` from repo root.
+   - Do **not** use `git add -A` before `commit-task.sh` (the script commits the index only).
+   - If the user asked to implement many tasks in one session without commits, finish with **per-task commits in order** before the completion report (see "After implementation" in that doc).
+   - Do not push unless the user asked or you are opening/updating a PR.
+
 9. Completion validation:
    - Verify all required tasks are completed
    - Check that implemented features match the original specification
@@ -216,6 +225,7 @@ Report final status with summary of completed work.
 ## Done When
 
 - [ ] All tasks in tasks.md completed and marked `[X]`
+- [ ] Each completed task has its own git commit on the feature branch (or user waived commits)
 - [ ] Implementation validated against specification, plan, and test coverage
 - [ ] Extension hooks dispatched or skipped according to the rules in Mandatory Post-Execution Hooks above
 - [ ] Completion reported to user with summary of completed work

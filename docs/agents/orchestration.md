@@ -28,12 +28,15 @@ ROADMAP / issue (ready-for-agent)
     -> /speckit-plan, /speckit-tasks
     -> branch NNN-kebab-name
     -> /speckit-implement (or manual per tasks.md)
+        -> per task: implement -> mark [X] -> git add (task files) -> commit-task.sh T###
     -> optional /speckit-analyze
-    -> Tier 0 verify
-    -> PR to main
+    -> Tier 0 verify (full branch)
+    -> push + PR to main (when user asks or opening PR)
 ```
 
 See [AGENTS.md](../../AGENTS.md) for branch naming rules.
+
+**Commits during implement:** [spec-kit-implement-commits.md](spec-kit-implement-commits.md) (required for agents).
 
 ## Workflow C: Multi-subagent (optional)
 

@@ -27,7 +27,7 @@ Single-context: `CONTEXT.md` and `docs/adr/`. See [docs/agents/domain.md](docs/a
 When a plan is active, use the Spec Kit flow on branch **`NNN-kebab-name`** (must match the spec folder, e.g. `001-discord-slash-commands`):
 
 1. **Specify / plan / tasks** under `specs/NNN-.../` (or update existing artifacts)
-2. **Implement** per `tasks.md`
+2. **Implement** per `tasks.md` — **one commit per task** after marking `[X]` (see [docs/agents/spec-kit-implement-commits.md](docs/agents/spec-kit-implement-commits.md))
 3. **Analyze** (`/speckit-analyze`) when useful before implement
 4. **Verify** Tier 0 (commands below when defined)
 5. **Pull request** into `main` when the feature is complete
@@ -53,7 +53,7 @@ Full checklist: [docs/agents/orchestration.md](docs/agents/orchestration.md).
 
 | Rule | Detail |
 |------|--------|
-| **Commit** | After meaningful, coherent units. Messages: `feat:`, `fix:`, `docs:`, `ci:`, etc. |
+| **Commit** | After meaningful, coherent units. Spec Kit: one commit per `tasks.md` row via `commit-task.sh` (see [spec-kit-implement-commits.md](docs/agents/spec-kit-implement-commits.md)). Otherwise `feat:`, `fix:`, `docs:`, etc. |
 | **Branch** | No direct commits to `main` for feature work. |
 | **Spec Kit branch** | `NNN-kebab-name` when `.specify/feature.json` points at `specs/NNN-.../`. |
 | **Otherwise** | `fix/...`, `feat/...` (kebab-case). |

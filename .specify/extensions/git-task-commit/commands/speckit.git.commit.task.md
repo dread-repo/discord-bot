@@ -34,9 +34,10 @@ Dry run (print message, do not commit):
 ## Agent steps
 
 1. Finish the task implementation and mark `- [x] T###` in `FEATURE_DIR/tasks.md`.
-2. Run `commit-task.sh` with that task id.
-3. If the script exits non-zero, fix the issue before starting the next task.
-4. If output is `No changes to commit`, either the task had no file changes (docs-only mark-only) or changes were already committed — continue.
+2. `git add` only files for that task plus `FEATURE_DIR/tasks.md` (see [spec-kit-implement-commits.md](../../../../docs/agents/spec-kit-implement-commits.md)).
+3. Run `commit-task.sh` with that task id.
+4. If the script exits non-zero, fix staging before starting the next task.
+5. If output is `No staged changes after exclusions`, nothing valid was staged — `git add` the task paths and retry.
 
 ## Commit message format
 
