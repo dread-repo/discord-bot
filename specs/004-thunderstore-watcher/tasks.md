@@ -60,7 +60,7 @@
 ### Implementation for User Story 2
 
 - [X] T015 [P] [US2] Add slash definition in `src/bot/commands/plugin-register-commands.ts`
-- [ ] T016 [US2] Implement `createPluginRegisterHandler` in `src/bot/handlers/plugin-register.ts` per [contracts/plugin-register.md](./contracts/plugin-register.md)
+- [X] T016 [US2] Implement `createPluginRegisterHandler` in `src/bot/handlers/plugin-register.ts` per [contracts/plugin-register.md](./contracts/plugin-register.md)
 - [ ] T017 [US2] Register command in `src/bot/register-commands.ts` and handler in `src/bot/handlers/interaction-create.ts`
 
 **Checkpoint**: Official guild register persists; denied elsewhere
