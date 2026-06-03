@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ### Added
 
+- GitHub watcher (spec 005): worker webhook HTTP on port 61952 (loopback + Cloudflare Tunnel), HMAC verification, event mapping, `watcher:github` announce jobs without role ping, dedupe by delivery id
 - Thunderstore watcher (spec 004): worker poll + announce jobs, dedupe, Container announcements to configured guilds, `/plugin register` in official guild
 - Guild watcher setup (spec 003): `/thunderstore setup` and `/github setup` with permission-gated config upserts via `GuildConfigStore`
 - Core platform (spec 002): Prisma schema and init migration, bot/worker bootstrap, BullMQ job queues with stub processors, guild/dedupe stores, permission resolver, announcement message builder, LLM gateway skeleton, `/platform-smoke` command, env validation, and config stubs
