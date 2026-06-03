@@ -45,7 +45,7 @@
 - [X] T011 [US1] Implement `thunderstore-announce` processor in `src/worker/processors/thunderstore-announce.ts` using `ContainerMessageBuilder` + `WatcherDedupeStore`
 - [X] T012 [US1] Wire real processors in `src/worker/register-processors.ts` for `watcher:thunderstore` (replace stub)
 - [X] T013 [US1] Add poll scheduler in `src/worker/schedule/thunderstore-poll.ts` and invoke from `src/worker.ts`
-- [ ] T014 [US1] Enqueue `llm:changelog-summarize` when body exceeds `MAX_BODY_CHARS` in `src/worker/processors/thunderstore-announce.ts` (fallback truncation if LLM stub)
+- [X] T014 [US1] Enqueue `llm:changelog-summarize` when body exceeds `MAX_BODY_CHARS` in `src/worker/processors/thunderstore-announce.ts` (fallback truncation if LLM stub)
 
 **Checkpoint**: QS2 — one announce per version; dedupe on replay
 
