@@ -110,13 +110,15 @@ cp .env.example .env
 
 | Variable | Used by | Status |
 |----------|---------|--------|
-| `DISCORD_TOKEN` | bot | Required |
-| `DISCORD_CLIENT_ID` | bot | Required (application id) |
+| `DISCORD_TOKEN` | bot, worker | Required (worker posts announce messages via REST) |
+| `DISCORD_CLIENT_ID` | bot, worker | Required (application id) |
+| `THUNDERSTORE_POLL_INTERVAL_MS` | worker | Optional — Thunderstore poll interval in ms (default `600000`) |
 | `DISCORD_DEV_GUILD_ID` | bot | Optional — guild-scoped slash commands (instant); omit for global |
 | `REDIS_URL` | bot, worker | Set by Docker Compose to `redis://redis:6379` |
 | `DATABASE_URL` | bot, worker | Planned — Supabase pooler + `?pgbouncer=true` |
 | `DIRECT_URL` | migrate, CI | Planned — direct Postgres for Prisma CLI |
-| `GITHUB_WEBHOOK_SECRET` | worker | Planned |
+| `GITHUB_WEBHOOK_SECRET` | worker | Required in production — must match GitHub repo webhook secret |
+| `WEBHOOK_PORT` | worker | Optional — default `61952`; must match `docker-compose.yml` worker port mapping |
 | `LLM_API_KEY` | worker | Planned |
 
 Never commit `.env`.
@@ -173,6 +175,7 @@ docker compose logs -f worker
 - Build context: **`.dockerignore`** excludes `node_modules`, specs, agent tooling, secrets.
 - Compose: **`docker-compose.yml`** — `.env` is optional (`required: false`).
 - Redis host port: `127.0.0.1:6379` only (not exposed on all interfaces).
+- Worker HTTP (GitHub webhooks, spec 005): `127.0.0.1:61952:61952` — loopback only; public URL via **Cloudflare Tunnel** on the host (see below).
 
 Rebuild after code changes:
 
@@ -180,6 +183,26 @@ Rebuild after code changes:
 docker compose build bot worker
 docker compose up -d
 ```
+
+## GitHub webhooks (production, spec 005)
+
+On **Arch Linux** (or similar) with `docker compose`, expose the worker webhook route to GitHub without opening inbound ports on the firewall:
+
+```text
+GitHub → https://hooks.<your-domain>/webhooks/github
+      → cloudflared (on host)
+      → http://127.0.0.1:61952 (worker container)
+```
+
+1. Run the stack: `docker compose up -d` (worker binds `127.0.0.1:61952` on the host).
+2. Create a **Cloudflare Tunnel** (Zero Trust → Tunnels): public hostname `hooks.<your-domain>` → service `http://127.0.0.1:61952`.
+3. Install `cloudflared` as a systemd service on the host; start after Docker.
+4. Add a webhook on **`dread-repo/dreadREPO`** with payload URL `https://hooks.<your-domain>/webhooks/github`, content type JSON, and secret = `GITHUB_WEBHOOK_SECRET` in `.env`.
+5. Configure each guild with `/github setup` (channel + event toggles).
+
+Full contract (DNS, systemd example, security): [specs/005-github-watcher/contracts/deployment-cloudflare-tunnel.md](../specs/005-github-watcher/contracts/deployment-cloudflare-tunnel.md).
+
+Local dev: POST to `http://127.0.0.1:61952/webhooks/github` or use a one-off tunnel (`cloudflared tunnel --url http://localhost:61952`) — see [quickstart](../specs/005-github-watcher/quickstart.md).
 
 ## Repository layout (application)
 

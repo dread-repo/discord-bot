@@ -4,6 +4,7 @@ import {
   loadOfficialPackagesManifest,
   type OfficialPackageManifestEntry,
 } from '../config/load-bundled.js';
+import { THUNDERSTORE_COMMUNITY } from '../constants.js';
 import { getPrisma } from '../db/prisma.js';
 
 export interface EffectivePackage {
@@ -11,6 +12,7 @@ export interface EffectivePackage {
   name: string;
   isCore: boolean;
   githubRepo: string | null;
+  thunderstoreCommunity: string;
   source: 'manifest' | 'database';
 }
 
@@ -31,14 +33,56 @@ export class GlobalPackageRegistry {
         name: row.name,
         isCore: row.isCore,
         githubRepo: row.githubRepo,
+        thunderstoreCommunity: THUNDERSTORE_COMMUNITY,
         source: 'database',
       });
     }
     return [...merged.values()];
   }
 
-  register(): never {
-    throw new Error('GlobalPackageRegistry.register is not implemented until spec 004');
+  async register(input: {
+    namespace: string;
+    name: string;
+    isCore: boolean;
+    githubRepo?: string | null;
+    registeredBy: string;
+  }): Promise<EffectivePackage> {
+    try {
+      const row = await this.db.globalPackage.create({
+        data: {
+          namespace: input.namespace,
+          name: input.name,
+          isCore: input.isCore,
+          githubRepo: input.githubRepo ?? null,
+          registeredBy: input.registeredBy,
+        },
+      });
+      return {
+        namespace: row.namespace,
+        name: row.name,
+        isCore: row.isCore,
+        githubRepo: row.githubRepo,
+        thunderstoreCommunity: THUNDERSTORE_COMMUNITY,
+        source: 'database',
+      };
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        err.code === 'P2002'
+      ) {
+        throw new DuplicateGlobalPackageError(input.namespace, input.name);
+      }
+      throw err;
+    }
+  }
+}
+
+export class DuplicateGlobalPackageError extends Error {
+  constructor(namespace: string, name: string) {
+    super(`Package ${namespace}/${name} is already registered globally`);
+    this.name = 'DuplicateGlobalPackageError';
   }
 }
 
@@ -48,6 +92,7 @@ function manifestEntryToEffective(entry: OfficialPackageManifestEntry): Effectiv
     name: entry.name,
     isCore: entry.isCore,
     githubRepo: entry.githubRepo ?? null,
+    thunderstoreCommunity: entry.thunderstoreCommunity ?? THUNDERSTORE_COMMUNITY,
     source: 'manifest',
   };
 }

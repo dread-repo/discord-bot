@@ -30,7 +30,7 @@ Validated in `src/lib/env.ts` via zod before `main()` / `runWorker()`.
 | `LLM_API_KEY` | If unset, skip LLM calls |
 | `LLM_MODEL` | Provider default |
 | `LLM_DAILY_TOKEN_BUDGET` | `budgetOk()` always true if unset |
-| `GITHUB_WEBHOOK_SECRET` | Webhook route returns 503 if unset (worker, spec 005) |
+| `GITHUB_WEBHOOK_SECRET` | Optional on worker. **Spec 005**: if unset, log warning and accept webhooks (local dev); if set, invalid/missing `X-Hub-Signature-256` → `401`. Production MUST set this. |
 | `LOG_LEVEL` | `info` |
 
 ## Failure behavior

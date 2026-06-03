@@ -18,6 +18,7 @@ Entry point for coding agents (Cursor, Claude Code, Cloud Agents, and similar).
 | File | Role |
 |------|------|
 | [orchestration.md](orchestration.md) | Solo, subagent, verify, release workflows |
+| [spec-kit-implement-commits.md](spec-kit-implement-commits.md) | Per-task git commits during `/speckit-implement` |
 | [issue-tracker.md](issue-tracker.md) | GitHub Issues (`gh` CLI) |
 | [triage-labels.md](triage-labels.md) | Label vocabulary |
 | [domain.md](domain.md) | CONTEXT + ADR consumption |

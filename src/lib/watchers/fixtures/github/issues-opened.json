@@ -1,0 +1,14 @@
+{
+  "action": "opened",
+  "issue": {
+    "title": "Bug: example issue",
+    "html_url": "https://github.com/dread-repo/dreadREPO/issues/2",
+    "number": 2,
+    "updated_at": "2026-06-01T10:00:00Z"
+  },
+  "repository": {
+    "full_name": "dread-repo/dreadREPO",
+    "default_branch": "main",
+    "html_url": "https://github.com/dread-repo/dreadREPO"
+  }
+}

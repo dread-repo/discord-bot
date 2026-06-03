@@ -1,0 +1,14 @@
+{
+  "ref": "refs/heads/main",
+  "compare": "https://github.com/dread-repo/dreadREPO/compare/abc123",
+  "repository": {
+    "full_name": "dread-repo/dreadREPO",
+    "default_branch": "main",
+    "html_url": "https://github.com/dread-repo/dreadREPO"
+  },
+  "head_commit": {
+    "id": "abc123",
+    "message": "feat: example push",
+    "timestamp": "2026-06-01T12:00:00Z"
+  }
+}

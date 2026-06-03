@@ -5,6 +5,10 @@ import type { RedisConnectionOptions } from '../lib/queue/job-queue.js';
 import { toBullMqQueueName } from '../lib/queue/bullmq-queue-name.js';
 import { QUEUE_NAMES } from '../lib/queue/queue-types.js';
 import { processPlatformSmokeJob } from './processors/platform-smoke.js';
+import { createGithubAnnounceProcessor } from './processors/github-announce.js';
+import { createThunderstoreProcessor } from './processors/thunderstore-processor.js';
+import type { GithubWorkerDeps } from './github-deps.js';
+import type { ThunderstoreWorkerDeps } from './thunderstore-deps.js';
 
 export interface WorkerRegistry {
   workers: Worker[];
@@ -18,12 +22,22 @@ const stubProcessor =
     return Promise.resolve();
   };
 
-export function registerProcessors(connection: RedisConnectionOptions): WorkerRegistry {
+export function registerProcessors(
+  connection: RedisConnectionOptions,
+  thunderstoreDeps: ThunderstoreWorkerDeps,
+  githubDeps: GithubWorkerDeps,
+): WorkerRegistry {
   const workers: Worker[] = [];
 
   for (const queueName of QUEUE_NAMES) {
-    const processor =
-      queueName === 'llm:dread-reply' ? processPlatformSmokeJob : stubProcessor(queueName);
+    let processor: Processor = stubProcessor(queueName);
+    if (queueName === 'llm:dread-reply') {
+      processor = processPlatformSmokeJob;
+    } else if (queueName === 'watcher:thunderstore') {
+      processor = createThunderstoreProcessor(thunderstoreDeps);
+    } else if (queueName === 'watcher:github') {
+      processor = createGithubAnnounceProcessor(githubDeps);
+    }
     workers.push(
       new Worker(toBullMqQueueName(queueName), processor, {
         connection,

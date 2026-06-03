@@ -90,17 +90,32 @@ fi
 if [[ "$DRY_RUN" == true ]]; then
   echo "--- dry-run commit message ---"
   printf '%s\n' "$COMMIT_MSG"
-  echo "--- staged files would be ---"
+  echo "--- staged files (commit uses index only; no git add -A) ---"
+  git diff --cached --name-only || true
   git status --short
   exit 0
 fi
 
-git add -A
-# Unstage paths agents must not commit (AGENTS.md)
-git reset HEAD -- .env 2>/dev/null || true
-if [[ -d supabase/.temp ]]; then
-  git reset HEAD -- supabase/.temp 2>/dev/null || true
+# Stage tasks.md when the checkbox line changed but was not staged yet.
+if ! git diff --cached --quiet -- "$TASKS_FILE" 2>/dev/null; then
+  :
+elif ! git diff --quiet -- "$TASKS_FILE" 2>/dev/null; then
+  git add "$TASKS_FILE"
 fi
+
+if git diff --cached --quiet; then
+  echo "ERROR: no staged changes for ${TASK_ID}." >&2
+  echo "Stage this task's files, then re-run:" >&2
+  echo "  git add <paths-from-tasks.md> ${TASKS_FILE}" >&2
+  echo "  $0 ${TASK_ID}" >&2
+  echo "See docs/agents/spec-kit-implement-commits.md" >&2
+  exit 1
+fi
+
+# Drop forbidden paths if they were staged by mistake.
+git reset HEAD -- .env .env.* 2>/dev/null || true
+git reset HEAD -- supabase/.temp supabase/.branches 2>/dev/null || true
+
 if git diff --cached --quiet; then
   echo "No staged changes after exclusions for ${TASK_ID}"
   exit 0

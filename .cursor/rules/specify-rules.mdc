@@ -1,20 +1,20 @@
 ---
+description: Spec Kit active feature context for Cursor agents
 alwaysApply: false
 ---
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
 shell commands, and other important information, read the current plan at
-[specs/004-thunderstore-watcher/plan.md](../specs/004-thunderstore-watcher/plan.md)
-(run `/speckit-plan` if missing).
+[specs/005-github-watcher/plan.md](../specs/005-github-watcher/plan.md)
 
 **Key artifacts**:
-- [spec.md](../specs/004-thunderstore-watcher/spec.md) — requirements & user stories
-- [tasks.md](../specs/004-thunderstore-watcher/tasks.md) — implementation checklist
-- Epic [001](../specs/001-dread-community-bot/EPIC.md) · [quickstart QS2](../specs/001-dread-community-bot/quickstart.md)
+- [spec.md](../specs/005-github-watcher/spec.md) · [tasks.md](../specs/005-github-watcher/tasks.md)
+- [research.md](../specs/005-github-watcher/research.md) · [data-model.md](../specs/005-github-watcher/data-model.md)
+- [contracts/](../specs/005-github-watcher/contracts/) · [quickstart.md](../specs/005-github-watcher/quickstart.md)
+
+**Also on `main`**: [004 Thunderstore watcher](../specs/004-thunderstore-watcher/plan.md)
 
 **Prerequisites on `main`**: [002](../specs/002-core-platform/plan.md), [003](../specs/003-guild-watcher-config/plan.md)
 
-**Stack**: TypeScript, Node 22, discord.js 14, Prisma 6, Supabase Postgres, BullMQ, `GuildConfigStore`, `WatcherDedupeStore`
-
-**Branch**: `004-thunderstore-watcher` · **Commits**: `commit-task.sh T###` per `/speckit-implement`
+**Commits**: per [spec-kit-implement-commits.md](../docs/agents/spec-kit-implement-commits.md) / `commit-task.sh T###`
 <!-- SPECKIT END -->

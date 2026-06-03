@@ -1,0 +1,16 @@
+{
+  "action": "opened",
+  "pull_request": {
+    "title": "feat: example PR",
+    "html_url": "https://github.com/dread-repo/dreadREPO/pull/1",
+    "merged": false,
+    "merged_at": null,
+    "updated_at": "2026-06-01T11:00:00Z",
+    "number": 1
+  },
+  "repository": {
+    "full_name": "dread-repo/dreadREPO",
+    "default_branch": "main",
+    "html_url": "https://github.com/dread-repo/dreadREPO"
+  }
+}
