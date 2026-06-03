@@ -1,10 +1,14 @@
+import { loadEnvFile } from './lib/load-env-file.js';
 import { loadWorkerEnv } from './lib/env.js';
 import { logError, logInfo } from './lib/log.js';
 import { JobQueue, verifyRedisConnection } from './lib/queue/job-queue.js';
 import { registerProcessors } from './worker/register-processors.js';
+import { scheduleThunderstorePoll } from './worker/schedule/thunderstore-poll.js';
+import { createThunderstoreWorkerDeps } from './worker/thunderstore-deps.js';
 import { registerWorkerShutdown } from './worker/shutdown.js';
 
 export async function runWorker(): Promise<void> {
+  loadEnvFile();
   const env = loadWorkerEnv();
 
   try {
@@ -15,8 +19,10 @@ export async function runWorker(): Promise<void> {
   }
 
   const jobQueue = new JobQueue(env.REDIS_URL);
-  const registry = registerProcessors(jobQueue.getConnectionOptions());
+  const thunderstoreDeps = createThunderstoreWorkerDeps(env, jobQueue);
+  const registry = registerProcessors(jobQueue.getConnectionOptions(), thunderstoreDeps);
   registerWorkerShutdown({ registry, jobQueue });
+  scheduleThunderstorePoll(jobQueue, env.THUNDERSTORE_POLL_INTERVAL_MS ?? 600_000);
 
   logInfo('[worker] consumers registered; waiting for jobs');
 }
