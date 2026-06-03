@@ -98,6 +98,10 @@ export class GuildConfigStore {
     return this.db.guildGithubConfig.findUnique({ where: { guildId } });
   }
 
+  async listGithubGuilds(): Promise<GuildGithubConfig[]> {
+    return this.db.guildGithubConfig.findMany();
+  }
+
   async upsertGithub(
     guildId: string,
     channelId: string,
