@@ -25,7 +25,7 @@
 - [X] T004 Implement `GlobalPackageRegistry.register` in `src/lib/packages/global-package-registry.ts`
 - [X] T005 Add `listThunderstoreGuilds()` on `GuildConfigStore` in `src/lib/config/guild-config-store.ts`
 - [X] T006 [P] Unit tests for dedupe key + registry register in `src/lib/watchers/thunderstore-dedupe.test.ts` and `src/lib/packages/global-package-registry.test.ts`
-- [ ] T007 Implement `ThunderstoreClient.fetchPackage` in `src/lib/watchers/thunderstore-client.ts` per [contracts/thunderstore-api.md](./contracts/thunderstore-api.md)
+- [X] T007 Implement `ThunderstoreClient.fetchPackage` in `src/lib/watchers/thunderstore-client.ts` per [contracts/thunderstore-api.md](./contracts/thunderstore-api.md)
 - [ ] T008 [P] Unit tests for client response parsing in `src/lib/watchers/thunderstore-client.test.ts`
 
 **Checkpoint**: Client + stores ready; no Discord posts yet
