@@ -71,7 +71,7 @@
 
 - [X] T018 [P] Document `THUNDERSTORE_POLL_INTERVAL_MS` in `docs/development.md`
 - [X] T019 Verify Tier 0: `pnpm test && pnpm run lint && pnpm run build`
-- [ ] T020 [P] Update [CHANGELOG.md](../../CHANGELOG.md) `[Unreleased]` for Thunderstore watcher + `/plugin register`
+- [X] T020 [P] Update [CHANGELOG.md](../../CHANGELOG.md) `[Unreleased]` for Thunderstore watcher + `/plugin register`
 
 ---
 
