@@ -14,6 +14,21 @@
       },
       "registered_skills": [],
       "installed_at": "2026-06-02T10:38:55.291178+00:00"
+    },
+    "git-task-commit": {
+      "version": "1.0.0",
+      "source": "local",
+      "enabled": true,
+      "priority": 20,
+      "registered_commands": {
+        "cursor-agent": [
+          "speckit.git.commit.task"
+        ]
+      },
+      "registered_skills": [
+        "speckit-git-commit-task"
+      ],
+      "installed_at": "2026-06-02T12:00:00.000000+00:00"
     }
   }
 }

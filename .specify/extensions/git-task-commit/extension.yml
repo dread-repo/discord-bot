@@ -1,0 +1,23 @@
+schema_version: "1.0"
+
+extension:
+  id: git-task-commit
+  name: "Git commit per Spec Kit task"
+  version: "1.0.0"
+  description: "Creates one git commit after each tasks.md item during /speckit-implement"
+  author: dread-repo
+  repository: local
+  license: MIT
+
+requires:
+  speckit_version: ">=0.2.0"
+
+provides:
+  commands:
+    - name: speckit.git.commit.task
+      file: commands/speckit.git.commit.task.md
+      description: "Commit working tree changes for a completed tasks.md item (T001, T002, …)"
+
+tags:
+  - "git"
+  - "workflow"
