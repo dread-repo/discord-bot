@@ -2,6 +2,7 @@ import { REST, Routes } from 'discord.js';
 
 import type { DeployEnv } from '../lib/env.js';
 import { logInfo } from '../lib/log.js';
+import { PLUGIN_COMMAND } from './commands/plugin-register-commands.js';
 import { GITHUB_COMMAND, THUNDERSTORE_COMMAND } from './commands/watcher-config-commands.js';
 
 export const PLATFORM_SMOKE_COMMAND = {
@@ -14,6 +15,7 @@ export const BOT_COMMANDS = [
   PLATFORM_SMOKE_COMMAND,
   THUNDERSTORE_COMMAND,
   GITHUB_COMMAND,
+  PLUGIN_COMMAND,
 ] as const;
 
 export async function deployBotCommands(env: DeployEnv, guildId?: string): Promise<void> {
