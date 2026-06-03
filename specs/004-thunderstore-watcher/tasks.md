@@ -13,7 +13,7 @@
 **Purpose**: Types, dedupe keys, env for poll interval
 
 - [X] T001 [P] Add Thunderstore API zod schemas in `src/lib/watchers/thunderstore-types.ts`
-- [ ] T002 [P] Add dedupe key helper `ts:{namespace}/{name}@{version}` in `src/lib/watchers/thunderstore-dedupe.ts`
+- [X] T002 [P] Add dedupe key helper `ts:{namespace}/{name}@{version}` in `src/lib/watchers/thunderstore-dedupe.ts`
 - [ ] T003 Add optional `THUNDERSTORE_POLL_INTERVAL_MS` to worker env schema in `src/lib/env.ts`
 
 ---
