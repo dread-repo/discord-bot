@@ -167,6 +167,19 @@ You **MUST** consider the user input before proceeding (if not empty).
    - Suggest next steps if implementation cannot proceed
    - **IMPORTANT** For completed tasks, make sure to mark the task off as [X] in the tasks file.
 
+8b. **Git commit after each task (this repo)** — **MANDATORY** when `git-task-commit` is installed (see `.specify/extensions.yml`):
+   - After marking a task `[x]` in `tasks.md`, run from repo root:
+     ```bash
+     .specify/extensions/git-task-commit/scripts/bash/commit-task.sh T###
+     ```
+     Replace `T###` with the task id you just finished (e.g. `T009`).
+   - Do **not** batch multiple tasks into one commit unless the user explicitly asks.
+   - Do **not** commit on `main` / `master` — use the Spec Kit feature branch (`NNN-kebab-name`).
+   - If the script prints `No changes to commit`, continue to the next task (docs-only or already committed).
+   - On script failure, stop implementation and report the error.
+   - Optional slash command: `/speckit-git-commit-task` (see `.agents/skills/speckit-git-commit-task/SKILL.md`).
+   - Never stage `.env` or `supabase/.temp/`.
+
 9. Completion validation:
    - Verify all required tasks are completed
    - Check that implemented features match the original specification

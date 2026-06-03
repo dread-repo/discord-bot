@@ -21,5 +21,8 @@ build/
 # Agent-local scratch (local issue tracker convention)
 .scratch/
 
+# Local Supabase CLI cache (not project config)
+supabase/.temp/
+
 # Optional: keep agent credentials out of git (see Specify init warning)
 # .cursor/mcp.json
