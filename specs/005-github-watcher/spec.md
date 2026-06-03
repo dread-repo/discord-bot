@@ -4,7 +4,7 @@
 
 **Created**: 2026-06-02
 
-**Status**: Draft
+**Status**: Planned (ready for `/speckit-implement`)
 
 **Epic**: [001 EPIC](../001-dread-community-bot/EPIC.md) · **Depends on**: [002-core-platform](../002-core-platform/spec.md), [003-guild-watcher-config](../003-guild-watcher-config/spec.md)
 
@@ -48,6 +48,7 @@ Contributors and players see pushes, PRs, CI, releases, issues, and deployments 
 
 - Worker HTTP server from platform spec 002.
 - Contract: [github-webhook](../001-dread-community-bot/contracts/github-webhook.md).
+- **Production**: Bot stack on **Arch Linux** via **Docker Compose**; GitHub webhook ingress via **Cloudflare Tunnel** to worker on host loopback ([deployment-cloudflare-tunnel](./contracts/deployment-cloudflare-tunnel.md)).
 
 ## Out of Scope
 

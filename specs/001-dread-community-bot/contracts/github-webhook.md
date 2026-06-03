@@ -1,6 +1,6 @@
 # Contract: GitHub webhook
 
-**Endpoint**: `POST /webhooks/github` (worker HTTP server, port `WEBHOOK_PORT` default `3000`)
+**Endpoint**: `POST /webhooks/github` (worker HTTP server, port `WEBHOOK_PORT` default `61952`)
 
 **Headers**:
 - `X-Hub-Signature-256`: HMAC SHA-256 of body with `GITHUB_WEBHOOK_SECRET`
