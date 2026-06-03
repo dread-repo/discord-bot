@@ -37,8 +37,48 @@ export class GlobalPackageRegistry {
     return [...merged.values()];
   }
 
-  register(): never {
-    throw new Error('GlobalPackageRegistry.register is not implemented until spec 004');
+  async register(input: {
+    namespace: string;
+    name: string;
+    isCore: boolean;
+    githubRepo?: string | null;
+    registeredBy: string;
+  }): Promise<EffectivePackage> {
+    try {
+      const row = await this.db.globalPackage.create({
+        data: {
+          namespace: input.namespace,
+          name: input.name,
+          isCore: input.isCore,
+          githubRepo: input.githubRepo ?? null,
+          registeredBy: input.registeredBy,
+        },
+      });
+      return {
+        namespace: row.namespace,
+        name: row.name,
+        isCore: row.isCore,
+        githubRepo: row.githubRepo,
+        source: 'database',
+      };
+    } catch (err: unknown) {
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'code' in err &&
+        err.code === 'P2002'
+      ) {
+        throw new DuplicateGlobalPackageError(input.namespace, input.name);
+      }
+      throw err;
+    }
+  }
+}
+
+export class DuplicateGlobalPackageError extends Error {
+  constructor(namespace: string, name: string) {
+    super(`Package ${namespace}/${name} is already registered globally`);
+    this.name = 'DuplicateGlobalPackageError';
   }
 }
 

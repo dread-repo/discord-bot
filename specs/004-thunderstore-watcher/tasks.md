@@ -22,7 +22,7 @@
 
 **Purpose**: Registry + guild list + processor wiring before user stories
 
-- [ ] T004 Implement `GlobalPackageRegistry.register` in `src/lib/packages/global-package-registry.ts`
+- [X] T004 Implement `GlobalPackageRegistry.register` in `src/lib/packages/global-package-registry.ts`
 - [ ] T005 Add `listThunderstoreGuilds()` on `GuildConfigStore` in `src/lib/config/guild-config-store.ts`
 - [ ] T006 [P] Unit tests for dedupe key + registry register in `src/lib/watchers/thunderstore-dedupe.test.ts` and `src/lib/packages/global-package-registry.test.ts`
 - [ ] T007 Implement `ThunderstoreClient.fetchPackage` in `src/lib/watchers/thunderstore-client.ts` per [contracts/thunderstore-api.md](./contracts/thunderstore-api.md)
