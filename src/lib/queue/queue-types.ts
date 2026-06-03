@@ -1,3 +1,5 @@
+import type { MappedGithubEvent } from '../watchers/github-types.js';
+
 /**
  * Logical queue names per epic job-queues contract (`:` namespace).
  * BullMQ uses hyphenated Redis names via `toBullMqQueueName()` (colons are invalid).
@@ -20,8 +22,8 @@ export type ThunderstoreWatchJob =
 
 export interface GitHubWatchJob {
   deliveryId: string;
-  event: 'push' | 'pull_request' | 'workflow_run' | 'release' | 'issues' | 'deployment';
-  payload: unknown;
+  event: MappedGithubEvent['event'];
+  mapped: MappedGithubEvent;
 }
 
 export interface ChangelogSummarizeJob {
