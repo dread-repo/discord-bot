@@ -40,7 +40,7 @@
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Implement poll logic `checkAllPackages` in `src/lib/watchers/thunderstore-watcher.ts`
+- [X] T009 [US1] Implement poll logic `checkAllPackages` in `src/lib/watchers/thunderstore-watcher.ts`
 - [ ] T010 [US1] Implement `thunderstore-poll` processor in `src/worker/processors/thunderstore-poll.ts`
 - [ ] T011 [US1] Implement `thunderstore-announce` processor in `src/worker/processors/thunderstore-announce.ts` using `ContainerMessageBuilder` + `WatcherDedupeStore`
 - [ ] T012 [US1] Wire real processors in `src/worker/register-processors.ts` for `watcher:thunderstore` (replace stub)
