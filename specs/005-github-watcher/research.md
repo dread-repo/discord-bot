@@ -44,9 +44,9 @@ Unmapped combinations: log at debug, return `200` without enqueue.
 
 ## R5: Dedupe
 
-**Decision**: Dedupe key `gh:{X-GitHub-Delivery}` via `WatcherDedupeStore.tryInsert` in announce processor (same pattern as 004). HTTP handler always returns `200` after enqueue attempt for valid repo + signature.
+**Decision**: Dedupe key `gh:{X-GitHub-Delivery}` via `WatcherDedupeStore.tryInsert` in announce processor (same pattern as 004). HTTP handler always returns `200` after enqueue attempt for valid repo + signature. Duplicate deliveries may enqueue multiple jobs; the processor skips the second post when `tryInsert` fails.
 
-**Rationale**: FR-006; GitHub retries on non-2xx.
+**Rationale**: FR-006; GitHub retries on non-2xx; ingest stays fast without a dedupe read on every webhook.
 
 ## R6: Announce fan-out
 
@@ -56,9 +56,9 @@ Unmapped combinations: log at debug, return `200` without enqueue.
 
 ## R7: Oversized body
 
-**Decision**: Same as 004 — if formatted body &gt; `MAX_BODY_CHARS`, enqueue `llm:changelog-summarize` with `source: 'github'` and truncate for immediate post until LLM wired.
+**Decision**: Same as 004 — if formatted body &gt; `MAX_BODY_CHARS`, enqueue `llm:changelog-summarize` with `source: 'github'` and truncate for immediate post. The `llm:changelog-summarize` consumer remains a platform stub until a later spec; FR-007 is satisfied by enqueue + truncation in v1.
 
-**Rationale**: FR-007.
+**Rationale**: FR-007; avoids blocking 005 on LLM processor work.
 
 ## R8: Production TLS / public URL (Cloudflare Tunnel)
 

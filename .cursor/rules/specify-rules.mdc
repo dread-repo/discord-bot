@@ -1,22 +1,20 @@
 ---
+description: Spec Kit active feature context for Cursor agents
 alwaysApply: false
 ---
 <!-- SPECKIT START -->
 For additional context about technologies to be used, project structure,
-shell commands, and other important information, read the current plan:
-
-**Plan**: [specs/003-guild-watcher-config/plan.md](../../specs/003-guild-watcher-config/plan.md)
+shell commands, and other important information, read the current plan at
+[specs/005-github-watcher/plan.md](../specs/005-github-watcher/plan.md)
 
 **Key artifacts**:
-- [spec.md](../../specs/003-guild-watcher-config/spec.md) — requirements & user stories
-- [research.md](../../specs/003-guild-watcher-config/research.md) — technical decisions
-- [data-model.md](../../specs/003-guild-watcher-config/data-model.md) — store scope
-- [tasks.md](../../specs/003-guild-watcher-config/tasks.md) — implementation checklist
-- [contracts/](../../specs/003-guild-watcher-config/contracts/) — thunderstore + github setup
-- [quickstart.md](../../specs/003-guild-watcher-config/quickstart.md) — QS1 acceptance
-- Platform [002](../002-core-platform/plan.md) — must be complete first
+- [spec.md](../specs/005-github-watcher/spec.md) · [tasks.md](../specs/005-github-watcher/tasks.md)
+- [research.md](../specs/005-github-watcher/research.md) · [data-model.md](../specs/005-github-watcher/data-model.md)
+- [contracts/](../specs/005-github-watcher/contracts/) · [quickstart.md](../specs/005-github-watcher/quickstart.md)
 
-**Stack**: TypeScript, Node 22, discord.js 14, Prisma 6, Supabase Postgres, 002 platform modules.
+**Prerequisites on `main`**: [002](../specs/002-core-platform/plan.md), [003](../specs/003-guild-watcher-config/plan.md); reuse [004](../specs/004-thunderstore-watcher/) REST announce patterns
 
-**Branch**: `003-guild-watcher-config`
+**Stack**: Worker HTTP `POST /webhooks/github`, HMAC verify, `watcher:github` BullMQ, `github-announce` processor, `GuildConfigStore.listGithubGuilds()`, dedupe `gh:{deliveryId}`
+
+**Branch**: `005-github-watcher` · **Commits**: per [spec-kit-implement-commits.md](../docs/agents/spec-kit-implement-commits.md) / `commit-task.sh T###`
 <!-- SPECKIT END -->

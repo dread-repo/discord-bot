@@ -16,7 +16,7 @@ Accept GitHub webhooks for `dread-repo/dreadREPO` on the worker HTTP server, ver
 
 **Storage**: `guild_github_config` (read), `watcher_dedupe` (write `gh:{deliveryId}`)
 
-**Testing**: Vitest — signature verification, event mapping fixtures per GitHub event type, announce processor with mocked stores + REST
+**Testing**: Vitest — signature verification, event mapping fixtures for all six internal event types, HTTP enqueue test, announce processor with mocked stores + REST (`github-announce.test.ts`)
 
 **Target Platform**: **Worker** only (HTTP + BullMQ processors); bot unchanged except docs
 
@@ -46,14 +46,13 @@ src/
 │   │   ├── github-dedupe.ts           # gh:{deliveryId}
 │   │   ├── github-webhook-verify.ts   # HMAC SHA-256
 │   │   ├── github-event-mapper.ts     # payload → internal event + body
-│   │   └── github-types.ts            # zod + AnnounceMeta builders
+│   │   └── github-types.ts            # MappedGithubEvent + internal event union
 │   └── config/
 │       └── guild-config-store.ts      # listGithubGuilds()
 ├── worker/
 │   ├── http.ts                        # POST /webhooks/github
 │   └── processors/
-│       ├── github-ingest.ts           # optional split: validate + enqueue
-│       └── github-announce.ts         # watcher:github consumer
+│       └── github-announce.ts         # watcher:github consumer (ingest in http.ts)
 ```
 
 **Documentation (this feature)**:

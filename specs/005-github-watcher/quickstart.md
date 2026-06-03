@@ -9,7 +9,7 @@
    - `GITHUB_WEBHOOK_SECRET` — same as GitHub App/webhook secret
    - `WEBHOOK_PORT=61952` (default)
    - `DISCORD_TOKEN` on worker (posts via REST, same as 004)
-3. Start worker: `pnpm run start:worker` (HTTP + BullMQ).
+3. Start worker: `pnpm run start:worker` (HTTP + BullMQ). Handler should return `200` within ~1s after enqueue (see plan performance goal).
 4. Send fixture webhook (from dev machine):
 
 ```bash
@@ -24,7 +24,8 @@ curl -X POST "http://127.0.0.1:61952/webhooks/github" \
 
 5. Observe **one** Container message in configured channel — **no** role ping.
 6. Repeat same `X-GitHub-Delivery` → **no** second message (dedupe).
-7. Send `release` fixture → GitHub button; Thunderstore button when release maps to core package version URL.
+7. Repeat with other fixtures under `src/lib/watchers/fixtures/github/` (`release-published.json`, `workflow-run-completed.json`, `pull-request-opened.json`, `issues-opened.json`, `deployment-status-success.json`) for SC-001 coverage.
+8. Send `release` fixture → GitHub button; Thunderstore button when release maps to core package version URL.
 
 **Pass**: Format matches [container-message](../../001-dread-community-bot/contracts/container-message.md); dedupe holds.
 

@@ -9,23 +9,23 @@
 type GitHubWatchJob = {
   deliveryId: string;
   event: 'push' | 'pull_request' | 'ci' | 'release' | 'issues' | 'deployment';
-  payload: unknown; // raw GitHub JSON for mapper in processor
+  mapped: MappedGithubEvent; // mapped at ingest; see github-event-mapper.ts
 };
 ```
 
-**Note**: Align `queue-types.ts` `GitHubWatchJob.event` with `ci` (not `workflow_run`) during implementation.
+**Note**: Internal `event` uses `ci` (not `workflow_run`). `mapped` is produced once in the HTTP handler and consumed by `github-announce`.
 
 ## Ingest flow
 
 1. HTTP handler validates signature + repo.
-2. `github-event-mapper` returns `{ event, deliveryId } | null`.
-3. If non-null → `jobQueue.enqueue('watcher:github', event, job)`.
+2. `mapGithubWebhook` returns `MappedGithubEvent | null`.
+3. If non-null → `jobQueue.enqueue('watcher:github', mapped.event, { deliveryId, event, mapped })`.
 
 ## `github-announce` processor
 
 1. `tryInsert('gh:' + deliveryId)` — skip if false.
 2. Build `AnnounceMeta` with `kind: 'github'`.
-3. For each guild in `listGithubGuilds()` where `events[job.event]`, `DiscordRestPoster.postAnnounce(channelId, meta)` **no ping role** (pass empty mention or dedicated method without mention).
+3. For each guild in `listGithubGuilds()` where `events[job.event]`, `DiscordRestPoster.postAnnounceWithoutPing(channelId, meta)`.
 
 ## `llm:changelog-summarize`
 

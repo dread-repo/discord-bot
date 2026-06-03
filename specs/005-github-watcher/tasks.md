@@ -26,8 +26,8 @@
 - [X] T005 Implement HMAC verification in `src/lib/watchers/github-webhook-verify.ts`
 - [X] T006 Implement `mapGithubWebhook` in `src/lib/watchers/github-event-mapper.ts` per [contracts/event-mapping.md](./contracts/event-mapping.md)
 - [X] T007 [P] Align `GitHubWatchJob.event` union in `src/lib/queue/queue-types.ts` with `ci` (not `workflow_run`)
-- [X] T008 [P] Unit tests: verify + mapper + dedupe in `src/lib/watchers/github-webhook-verify.test.ts`, `github-event-mapper.test.ts`, `github-dedupe.test.ts`
-- [X] T009 [P] Add JSON fixtures under `src/lib/watchers/fixtures/github/` for push, release, workflow_run
+- [X] T008 [P] Unit tests: verify + mapper + dedupe; announce processor in `github-announce.test.ts`
+- [X] T009 [P] Add JSON fixtures under `src/lib/watchers/fixtures/github/` for all six internal event types
 
 **Checkpoint**: Mapper returns internal events; no HTTP yet
 

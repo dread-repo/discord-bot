@@ -34,6 +34,26 @@ describe('github-event-mapper', () => {
     expect(mapped?.event).toBe('ci');
   });
 
+  it('maps pull_request opened', () => {
+    const payload = loadFixture('pull-request-opened.json');
+    const mapped = mapGithubWebhook('pull_request', payload, 'delivery-pr');
+    expect(mapped?.event).toBe('pull_request');
+    expect(mapped?.versionOrRef).toBe('#1');
+  });
+
+  it('maps issues opened', () => {
+    const payload = loadFixture('issues-opened.json');
+    const mapped = mapGithubWebhook('issues', payload, 'delivery-issue');
+    expect(mapped?.event).toBe('issues');
+  });
+
+  it('maps deployment_status success', () => {
+    const payload = loadFixture('deployment-status-success.json');
+    const mapped = mapGithubWebhook('deployment_status', payload, 'delivery-deploy');
+    expect(mapped?.event).toBe('deployment');
+    expect(mapped?.versionOrRef).toBe('main');
+  });
+
   it('ignores push to feature branch', () => {
     const payload = loadFixture('push-master.json') as Record<string, unknown>;
     const mapped = mapGithubWebhook(
