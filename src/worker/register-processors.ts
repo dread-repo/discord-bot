@@ -5,7 +5,9 @@ import type { RedisConnectionOptions } from '../lib/queue/job-queue.js';
 import { toBullMqQueueName } from '../lib/queue/bullmq-queue-name.js';
 import { QUEUE_NAMES } from '../lib/queue/queue-types.js';
 import { processPlatformSmokeJob } from './processors/platform-smoke.js';
+import { createGithubAnnounceProcessor } from './processors/github-announce.js';
 import { createThunderstoreProcessor } from './processors/thunderstore-processor.js';
+import type { GithubWorkerDeps } from './github-deps.js';
 import type { ThunderstoreWorkerDeps } from './thunderstore-deps.js';
 
 export interface WorkerRegistry {
@@ -23,6 +25,7 @@ const stubProcessor =
 export function registerProcessors(
   connection: RedisConnectionOptions,
   thunderstoreDeps: ThunderstoreWorkerDeps,
+  githubDeps: GithubWorkerDeps,
 ): WorkerRegistry {
   const workers: Worker[] = [];
 
@@ -32,6 +35,8 @@ export function registerProcessors(
       processor = processPlatformSmokeJob;
     } else if (queueName === 'watcher:thunderstore') {
       processor = createThunderstoreProcessor(thunderstoreDeps);
+    } else if (queueName === 'watcher:github') {
+      processor = createGithubAnnounceProcessor(githubDeps);
     }
     workers.push(
       new Worker(toBullMqQueueName(queueName), processor, {
