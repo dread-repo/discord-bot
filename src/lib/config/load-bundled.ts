@@ -10,6 +10,8 @@ const officialPackageSchema = z.object({
   name: z.string(),
   isCore: z.boolean(),
   githubRepo: z.string().optional(),
+  /** Thunderstore community slug (R.E.P.O. uses `repo`). */
+  thunderstoreCommunity: z.string().optional(),
 });
 
 const officialPackagesFileSchema = z.object({

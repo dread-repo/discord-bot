@@ -5,6 +5,11 @@ import { getPrisma } from '../db/prisma.js';
 export class WatcherDedupeStore {
   constructor(private readonly db: PrismaClient = getPrisma()) {}
 
+  async hasDedupeKey(dedupeKey: string): Promise<boolean> {
+    const row = await this.db.watcherDedupe.findUnique({ where: { dedupeKey } });
+    return row !== null;
+  }
+
   /** Returns true when the key was inserted; false when it already existed. */
   async tryInsert(dedupeKey: string): Promise<boolean> {
     try {

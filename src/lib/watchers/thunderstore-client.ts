@@ -4,7 +4,8 @@ import {
   type ThunderstoreLatestVersion,
 } from './thunderstore-types.js';
 
-const API_BASE = 'https://thunderstore.io/api/v1/package';
+/** R.E.P.O. packages (e.g. elytraking/Dread) are on the experimental API; v1 returns 404. */
+const API_BASE = 'https://thunderstore.io/api/experimental/package';
 const MAX_ATTEMPTS = 3;
 
 export class ThunderstoreClient {

@@ -1,6 +1,8 @@
+import type { WatcherDedupeStore } from '../dedupe/watcher-dedupe-store.js';
 import { logError, logInfo } from '../log.js';
 import type { JobQueue } from '../queue/job-queue.js';
 import type { GlobalPackageRegistry } from '../packages/global-package-registry.js';
+import { buildThunderstoreDedupeKey } from './thunderstore-dedupe.js';
 import type { ThunderstoreClient } from './thunderstore-client.js';
 
 export class ThunderstoreWatcher {
@@ -10,6 +12,7 @@ export class ThunderstoreWatcher {
     private readonly registry: GlobalPackageRegistry,
     private readonly client: ThunderstoreClient,
     private readonly jobQueue: JobQueue,
+    private readonly dedupe: WatcherDedupeStore,
   ) {}
 
   async checkAllPackages(): Promise<void> {
@@ -24,8 +27,14 @@ export class ThunderstoreWatcher {
         }
         this.lastSeen.set(packageKey, latest.version);
         if (previous === undefined) {
-          logInfo(`[thunderstore] baseline ${packageKey}@${latest.version}`);
-          continue;
+          const dedupeKey = buildThunderstoreDedupeKey(packageKey, latest.version);
+          if (await this.dedupe.hasDedupeKey(dedupeKey)) {
+            logInfo(
+              `[thunderstore] baseline ${packageKey}@${latest.version} (already announced)`,
+            );
+            continue;
+          }
+          logInfo(`[thunderstore] first poll ${packageKey}@${latest.version}, queuing announce`);
         }
         await this.jobQueue.enqueue('watcher:thunderstore', 'announce', {
           kind: 'announce',

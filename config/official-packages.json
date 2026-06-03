@@ -1,10 +1,11 @@
 {
   "packages": [
     {
-      "namespace": "dread",
-      "name": "dread",
+      "namespace": "elytraking",
+      "name": "Dread",
       "isCore": true,
-      "githubRepo": "dread-repo/dreadREPO"
+      "githubRepo": "dread-repo/dreadREPO",
+      "thunderstoreCommunity": "repo"
     }
   ]
 }

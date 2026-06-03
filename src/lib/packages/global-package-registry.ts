@@ -4,6 +4,7 @@ import {
   loadOfficialPackagesManifest,
   type OfficialPackageManifestEntry,
 } from '../config/load-bundled.js';
+import { THUNDERSTORE_COMMUNITY } from '../constants.js';
 import { getPrisma } from '../db/prisma.js';
 
 export interface EffectivePackage {
@@ -11,6 +12,7 @@ export interface EffectivePackage {
   name: string;
   isCore: boolean;
   githubRepo: string | null;
+  thunderstoreCommunity: string;
   source: 'manifest' | 'database';
 }
 
@@ -31,6 +33,7 @@ export class GlobalPackageRegistry {
         name: row.name,
         isCore: row.isCore,
         githubRepo: row.githubRepo,
+        thunderstoreCommunity: THUNDERSTORE_COMMUNITY,
         source: 'database',
       });
     }
@@ -59,6 +62,7 @@ export class GlobalPackageRegistry {
         name: row.name,
         isCore: row.isCore,
         githubRepo: row.githubRepo,
+        thunderstoreCommunity: THUNDERSTORE_COMMUNITY,
         source: 'database',
       };
     } catch (err: unknown) {
@@ -88,6 +92,7 @@ function manifestEntryToEffective(entry: OfficialPackageManifestEntry): Effectiv
     name: entry.name,
     isCore: entry.isCore,
     githubRepo: entry.githubRepo ?? null,
+    thunderstoreCommunity: entry.thunderstoreCommunity ?? THUNDERSTORE_COMMUNITY,
     source: 'manifest',
   };
 }

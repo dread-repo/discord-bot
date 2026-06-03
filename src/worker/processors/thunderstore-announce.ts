@@ -75,7 +75,12 @@ function buildAnnounceMeta(
   timestamp: Date,
 ): AnnounceMeta {
   const packageKey = `${namespace}/${name}`;
-  const thunderstoreUrl = thunderstoreVersionUrl(namespace, name, version);
+  const thunderstoreUrl = thunderstoreVersionUrl(
+    pkg.thunderstoreCommunity,
+    namespace,
+    name,
+    version,
+  );
   const meta: AnnounceMeta = {
     kind: 'thunderstore',
     label: pkg.isCore ? 'core' : `plugin: ${packageKey}`,

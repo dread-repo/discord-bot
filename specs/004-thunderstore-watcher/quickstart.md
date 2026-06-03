@@ -8,7 +8,7 @@
 2. Start worker: `pnpm run start:worker` (poll runs on interval).
 3. **Trigger new version** (pick one):
    - Temporarily bump version in `config/official-packages.json` test entry and mock client in dev, **or**
-   - Manually enqueue: `watcher:thunderstore` job `{ kind: 'announce', packageKey: 'BepInEx/BepInExPack', version: '<new>' }` via worker debug helper.
+   - Manually enqueue: `watcher:thunderstore` job `{ kind: 'announce', packageKey: 'elytraking/Dread', version: '<new>' }` via worker debug helper.
 4. Observe **one** Container message in configured channel with version, timestamp, dread branding, GitHub + Thunderstore buttons when URLs exist, and role ping.
 5. Re-enqueue **same** `packageKey` + `version` → **no** second message (dedupe).
 

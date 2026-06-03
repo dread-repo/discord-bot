@@ -3,6 +3,7 @@ import { z } from 'zod';
 const versionSchema = z.object({
   version_number: z.string(),
   changelog: z.string().nullable().optional(),
+  description: z.string().optional(),
   date_created: z.string().optional(),
 });
 
@@ -29,13 +30,18 @@ export function parseThunderstorePackageResponse(data: unknown): ThunderstoreLat
     versionRow.date_created !== undefined ? new Date(versionRow.date_created) : new Date();
   return {
     version: versionRow.version_number,
-    changelog: versionRow.changelog ?? '',
+    changelog: versionRow.changelog ?? versionRow.description ?? '',
     dateCreated,
   };
 }
 
-export function thunderstoreVersionUrl(namespace: string, name: string, version: string): string {
-  return `https://thunderstore.io/c/${namespace}/p/${name}/v/${version}/`;
+export function thunderstoreVersionUrl(
+  community: string,
+  namespace: string,
+  name: string,
+  version: string,
+): string {
+  return `https://thunderstore.io/c/${community}/p/${namespace}/${name}/v/${version}/`;
 }
 
 export function githubReleaseUrl(repo: string, version: string): string {

@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 
 import { ThunderstoreClient } from './thunderstore-client.js';
-import { parseThunderstorePackageResponse } from './thunderstore-types.js';
+import { parseThunderstorePackageResponse, thunderstoreVersionUrl } from './thunderstore-types.js';
 
 describe('parseThunderstorePackageResponse', () => {
   it('reads latest version fields', () => {
@@ -24,6 +24,16 @@ describe('parseThunderstorePackageResponse', () => {
     expect(result.version).toBe('9.0.0');
     expect(result.changelog).toBe('');
   });
+
+  it('uses description when changelog is absent', () => {
+    const result = parseThunderstorePackageResponse({
+      latest: {
+        version_number: '1.6.1',
+        description: 'Atmospheric horror overhaul for R.E.P.O.',
+      },
+    });
+    expect(result.changelog).toBe('Atmospheric horror overhaul for R.E.P.O.');
+  });
 });
 
 describe('ThunderstoreClient', () => {
@@ -40,7 +50,15 @@ describe('ThunderstoreClient', () => {
     const latest = await client.fetchPackage('BepInEx', 'BepInExPack');
     expect(latest.version).toBe('2.0.0');
     expect(fetchFn).toHaveBeenCalledWith(
-      'https://thunderstore.io/api/v1/package/BepInEx/BepInExPack/',
+      'https://thunderstore.io/api/experimental/package/BepInEx/BepInExPack/',
+    );
+  });
+});
+
+describe('thunderstoreVersionUrl', () => {
+  it('uses community slug in Thunderstore page URL', () => {
+    expect(thunderstoreVersionUrl('repo', 'elytraking', 'Dread', '1.6.1')).toBe(
+      'https://thunderstore.io/c/repo/p/elytraking/Dread/v/1.6.1/',
     );
   });
 });

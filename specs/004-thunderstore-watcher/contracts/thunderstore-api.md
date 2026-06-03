@@ -5,15 +5,18 @@
 ## Endpoint
 
 ```http
-GET https://thunderstore.io/api/v1/package/{namespace}/{name}/
+GET https://thunderstore.io/api/experimental/package/{namespace}/{name}/
 ```
+
+R.E.P.O. packages (including core **elytraking/Dread**) return 404 on legacy v1; use experimental.
 
 ## Response (subset)
 
 | Field | Use |
 |-------|-----|
 | `latest.version_number` | Version string for dedupe + display |
-| `latest.changelog` | Announcement body (markdown) |
+| `latest.changelog` | Announcement body when present |
+| `latest.description` | Body fallback when changelog absent |
 | `latest.date_created` | Announcement timestamp |
 | `latest.download_url` | Optional metadata |
 
@@ -31,5 +34,5 @@ Validate with zod in `thunderstore-types.ts`.
 
 | Link | Pattern |
 |------|---------|
-| Thunderstore version | `https://thunderstore.io/c/{namespace}/p/{name}/v/{version}/` |
+| Thunderstore version | `https://thunderstore.io/c/{community}/p/{namespace}/{name}/v/{version}/` (R.E.P.O. community: `repo`) |
 | GitHub release (optional) | `https://github.com/{owner}/{repo}/releases/tag/{version}` when `githubRepo` set |

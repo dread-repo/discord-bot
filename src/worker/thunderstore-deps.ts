@@ -23,13 +23,14 @@ export function createThunderstoreWorkerDeps(
 ): ThunderstoreWorkerDeps {
   const registry = new GlobalPackageRegistry();
   const client = new ThunderstoreClient();
-  const watcher = new ThunderstoreWatcher(registry, client, jobQueue);
+  const dedupe = new WatcherDedupeStore();
+  const watcher = new ThunderstoreWatcher(registry, client, jobQueue, dedupe);
   return {
     jobQueue,
     registry,
     guildConfig: new GuildConfigStore(),
     client,
-    dedupe: new WatcherDedupeStore(),
+    dedupe,
     discord: new DiscordRestPoster(env.DISCORD_TOKEN),
     watcher,
   };
