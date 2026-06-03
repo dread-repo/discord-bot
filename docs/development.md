@@ -110,8 +110,9 @@ cp .env.example .env
 
 | Variable | Used by | Status |
 |----------|---------|--------|
-| `DISCORD_TOKEN` | bot | Required |
-| `DISCORD_CLIENT_ID` | bot | Required (application id) |
+| `DISCORD_TOKEN` | bot, worker | Required (worker posts announce messages via REST) |
+| `DISCORD_CLIENT_ID` | bot, worker | Required (application id) |
+| `THUNDERSTORE_POLL_INTERVAL_MS` | worker | Optional — Thunderstore poll interval in ms (default `600000`) |
 | `DISCORD_DEV_GUILD_ID` | bot | Optional — guild-scoped slash commands (instant); omit for global |
 | `REDIS_URL` | bot, worker | Set by Docker Compose to `redis://redis:6379` |
 | `DATABASE_URL` | bot, worker | Planned — Supabase pooler + `?pgbouncer=true` |
